@@ -1,0 +1,132 @@
+object Fgraphics: TFgraphics
+  Left = 45
+  Height = 290
+  Top = 469
+  Width = 419
+  Caption = 'Графический редактор'
+  ClientHeight = 265
+  ClientWidth = 419
+  Menu = Mmenu
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  LCLVersion = '1.6.4.0'
+  object PBdraw: TPaintBox
+    Left = 0
+    Height = 265
+    Top = 0
+    Width = 419
+    Align = alClient
+    OnMouseDown = PBdrawMouseDown
+    OnMouseMove = PBdrawMouseMove
+    OnMouseUp = PBdrawMouseUp
+    OnPaint = PBdrawPaint
+  end
+  object Mmenu: TMainMenu
+    left = 128
+    top = 40
+    object Mfile: TMenuItem
+      Caption = 'Файл'
+      object Mtrait: TMenuItem
+        Caption = '-'
+      end
+      object Mexit: TMenuItem
+        Caption = 'Выход'
+        OnClick = MexitClick
+      end
+    end
+    object Medit: TMenuItem
+      Caption = 'Правка'
+      object Mannulment: TMenuItem
+        Caption = 'Отменить'
+        OnClick = MannulmentClick
+      end
+      object Mreturn: TMenuItem
+        Caption = 'Вернуть'
+        OnClick = MreturnClick
+      end
+      object Meraseall: TMenuItem
+        Caption = 'Стереть все'
+        OnClick = MeraseallClick
+      end
+    end
+    object Mshape: TMenuItem
+      Caption = 'Вид'
+      object Mline: TMenuItem
+        Caption = 'Линия'
+        object Mcolor: TMenuItem
+          Caption = 'Цвет'
+          OnClick = McolorClick
+        end
+        object Mthickness: TMenuItem
+          Caption = 'Толщина'
+          OnClick = MthicknessClick
+        end
+      end
+      object Mfondcolor: TMenuItem
+        Caption = 'Цвет листа'
+        OnClick = MfondcolorClick
+      end
+    end
+    object Mreference: TMenuItem
+      Caption = 'Справка'
+      object Minformation: TMenuItem
+        Caption = 'О программе'
+        OnClick = MinformationClick
+      end
+    end
+  end
+  object CDpen: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 223
+    top = 49
+  end
+  object CDfond: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 222
+    top = 127
+  end
+end
