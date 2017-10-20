@@ -6,24 +6,21 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
-  ExtCtrls, thickness;
+  ExtCtrls, StdCtrls, thickness, Ufigures, Utools;
 
 type
-
-  TlineFormat = record
-    Line: array of TPoint;
-    Color: TColor;
-    Thicknes: integer;
-  end;
 
   { TFgraphics }
 
   TFgraphics = class(TForm)
     CDpen: TColorDialog;
     CDfond: TColorDialog;
+    CDfill: TColorDialog;
     Mannulment: TMenuItem;
     Medit: TMenuItem;
     Mcolor: TMenuItem;
+    Mfillcolor: TMenuItem;
+    Mfill: TMenuItem;
     Meraseall: TMenuItem;
     Mthickness: TMenuItem;
     Mfondcolor: TMenuItem;
@@ -36,12 +33,14 @@ type
     Mexit: TMenuItem;
     Mfile: TMenuItem;
     Mmenu: TMainMenu;
+    PNtool: TPanel;
     PBdraw: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure MannulmentClick(Sender: TObject);
     procedure McolorClick(Sender: TObject);
     procedure MeraseallClick(Sender: TObject);
     procedure MexitClick(Sender: TObject);
+    procedure MfillcolorClick(Sender: TObject);
     procedure MfondcolorClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
@@ -52,17 +51,20 @@ type
     procedure PBdrawMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawPaint(Sender: TObject);
+    procedure ToolBtnClick(ASender: TObject);
+    procedure ButtonCreate(Fstart, Ffinish: TPoint; num: integer);
   private
     { private declarations }
   public
+    { public declarations }
   end;
 
 var
   Fgraphics: TFgraphics;
   Drawing: boolean;
-  ActualThicknes: integer;
-  ActualPenColor, ActualFontColor: TColor;
-  Pic, ReturnPic: array of Tlineformat;
+  CurrentWidth: integer;
+  CurrentPenColor, CurrentFontColor, CurrentFillColor: TColor;
+  Figures, CtrlZFigures: array of Tfigure;
 
 implementation
 
@@ -70,14 +72,40 @@ implementation
 
 { TFgraphics }
 
+procedure TFgraphics.ToolBtnClick(ASender: TObject);
+begin
+  ToolNum := (ASender as TButton).Tag;
+end;
+
+procedure TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; num: integer);
+var
+  button: TButton;
+begin
+  button := TButton.Create(Fgraphics);
+  button.Parent := PNtool;
+  button.Left := Fstart.x;
+  button.Top := Fstart.y;
+  button.Width := Ffinish.x;
+  button.Height := Ffinish.y;
+  button.Tag := Num;
+  button.OnClick := @ToolBtnClick;
+  button.Caption := ToolList[Num].ToolName;
+end;
+
 procedure TFgraphics.FormCreate(Sender: TObject);
 begin
-  SetLength(Pic, 0);
-  SetLength(ReturnPic, 0);
   Drawing := False;
-  ActualPenColor := clBlack;
-  ActualFontColor := clWhite;
-  ActualThicknes := 1;
+  CurrentPenColor := clBlack;
+  CurrentFillColor := clWhite;
+  CurrentFontColor := clWhite;
+  CurrentWidth := 1;
+  SetLength(Figures, 0);
+  SetLength(CtrlZFigures, 0);
+  ToolNum := 0;
+  ButtonCreate(Point(10, 10), Point(90, 30), 0);
+  ButtonCreate(Point(10, 50), Point(90, 30), 1);
+  ButtonCreate(Point(10, 90), Point(90, 30), 2);
+  ButtonCreate(Point(10, 130), Point(90, 30), 3);
 end;
 
 procedure TFgraphics.MexitClick(Sender: TObject);
@@ -85,24 +113,33 @@ begin
   Fgraphics.Close;
 end;
 
+procedure TFgraphics.MfillcolorClick(Sender: TObject);
+begin
+  if CDfill.Execute then
+  begin
+    CurrentFillColor := CDfill.Color;
+    PBdraw.Invalidate;
+  end;
+end;
+
 procedure TFgraphics.MannulmentClick(Sender: TObject);
 begin
-  if Length(Pic) > 0 then
+  if Length(Figures) > 0 then
   begin
-    SetLength(ReturnPic, Length(ReturnPic) + 1);
-    ReturnPic[High(ReturnPic)] := Pic[High(Pic)];
-    SetLength(Pic, High(Pic));
+    SetLength(CtrlZFigures, Length(CtrlZFigures) + 1);
+    CtrlZFigures[High(CtrlZFigures)] := Figures[High(Figures)];
+    SetLength(Figures, High(Figures));
   end;
   PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MreturnClick(Sender: TObject);
 begin
-  if (Length(ReturnPic) > 0) and (Length(Pic) >= 0) then
+  if (Length(CtrlZFigures) > 0) and (Length(Figures) >= 0) then
   begin
-    SetLength(Pic, Length(Pic) + 1);
-    Pic[High(Pic)] := ReturnPic[High(ReturnPic)];
-    SetLength(ReturnPic, High(ReturnPic));
+    SetLength(Figures, Length(Figures) + 1);
+    Figures[High(Figures)] := CtrlZFigures[High(CtrlZFigures)];
+    SetLength(CtrlZFigures, High(CtrlZFigures));
   end;
   PBdraw.Invalidate;
 end;
@@ -117,7 +154,7 @@ procedure TFgraphics.McolorClick(Sender: TObject);
 begin
   if CDpen.Execute then
   begin
-    ActualPenColor := CDpen.Color;
+    CurrentPenColor := CDpen.Color;
     PBdraw.Invalidate;
   end;
 end;
@@ -125,7 +162,7 @@ end;
 procedure TFgraphics.MthicknessClick(Sender: TObject);
 begin
   Fthickness.ShowModal;
-  ActualThicknes := ActualThicknes1;
+  CurrentWidth := ActualThicknes1;
   PBdraw.Invalidate;
 end;
 
@@ -133,7 +170,7 @@ procedure TFgraphics.MfondcolorClick(Sender: TObject);
 begin
   if CDfond.Execute then
   begin
-    ActualFontColor := CDfond.Color;
+    CurrentFontColor := CDfond.Color;
     PBdraw.Invalidate;
   end;
 end;
@@ -149,7 +186,7 @@ begin
   if button = mbLeft then
   begin
     Drawing := True;
-    SetLength(Pic, Length(Pic) + 1);
+    ToolList[ToolNum].CreateObject(x, y);
   end;
 end;
 
@@ -157,15 +194,14 @@ procedure TFgraphics.PBdrawMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: integer);
 begin
   if (Drawing) then
-    with pic[High(pic)] do
-    begin
-      SetLength(Line, Length(Line) + 1);
-      Line[High(Line)] := Point(X, Y);
-      Color := ActualPenColor;
-      Thicknes := ActualThicknes;
-      SetLength(ReturnPic, 0);
-      PBdraw.Invalidate;
-    end;
+  begin
+    Figures[High(Figures)].MousMove(x, y);
+    Figures[High(Figures)].PenColor := CurrentPenColor;
+    Figures[High(Figures)].FillColor := CurrentFillColor;
+    Figures[High(Figures)].Width := CurrentWidth;
+    SetLength(CtrlZFigures, 0);
+    PBdraw.Invalidate;
+  end;
 end;
 
 procedure TFgraphics.PBdrawMouseUp(Sender: TObject; Button: TMouseButton;
@@ -174,7 +210,6 @@ begin
   if button = mbLeft then
   begin
     Drawing := False;
-    PBdraw.Invalidate;
   end;
 end;
 
@@ -184,14 +219,12 @@ var
 begin
   with PBdraw.Canvas do
   begin
-    Brush.Color := ActualFontColor;
+    Brush.Color := CurrentFontColor;
     FillRect(0, 0, PBdraw.Width, PBdraw.Height);
-    for i := 0 to High(Pic) do
-    begin
-      Pen.Color := Pic[i].Color;
-      Pen.Width := Pic[i].Thicknes;
-      Polyline(Pic[i].Line);
-    end;
+  end;
+  for i := 0 to High(Figures) do
+  begin
+    Figures[i].Draw(PBdraw.Canvas);
   end;
 end;
 

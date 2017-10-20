@@ -1,7 +1,7 @@
 object Fthickness: TFthickness
-  Left = 136
+  Left = 102
   Height = 99
-  Top = 300
+  Top = 165
   Width = 246
   BorderStyle = bsDialog
   Caption = 'Толщина линии'

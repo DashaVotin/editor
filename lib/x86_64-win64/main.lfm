@@ -1,7 +1,7 @@
 object Fgraphics: TFgraphics
-  Left = 45
+  Left = 23
   Height = 290
-  Top = 469
+  Top = 330
   Width = 419
   Caption = 'Графический редактор'
   ClientHeight = 265
@@ -11,19 +11,27 @@ object Fgraphics: TFgraphics
   Position = poDesktopCenter
   LCLVersion = '1.6.4.0'
   object PBdraw: TPaintBox
-    Left = 0
+    Left = 112
     Height = 265
     Top = 0
-    Width = 419
+    Width = 307
     Align = alClient
     OnMouseDown = PBdrawMouseDown
     OnMouseMove = PBdrawMouseMove
     OnMouseUp = PBdrawMouseUp
     OnPaint = PBdrawPaint
   end
+  object PNtool: TPanel
+    Left = 0
+    Height = 265
+    Top = 0
+    Width = 112
+    Align = alLeft
+    TabOrder = 0
+  end
   object Mmenu: TMainMenu
-    left = 128
-    top = 40
+    left = 72
+    top = 8
     object Mfile: TMenuItem
       Caption = 'Файл'
       object Mtrait: TMenuItem
@@ -60,6 +68,13 @@ object Fgraphics: TFgraphics
         object Mthickness: TMenuItem
           Caption = 'Толщина'
           OnClick = MthicknessClick
+        end
+      end
+      object Mfill: TMenuItem
+        Caption = 'Заливка'
+        object Mfillcolor: TMenuItem
+          Caption = 'Цвет'
+          OnClick = MfillcolorClick
         end
       end
       object Mfondcolor: TMenuItem
@@ -128,5 +143,32 @@ object Fgraphics: TFgraphics
     )
     left = 222
     top = 127
+  end
+  object CDfill: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 307
+    top = 63
   end
 end

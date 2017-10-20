@@ -34,7 +34,7 @@ implementation
 
 procedure TFthickness.BTokClick(Sender: TObject);
 begin
-  ActualThicknes1:=StrToInt(SEthickness.Text);
+  ActualThicknes1 := StrToInt(SEthickness.Text);
   Fthickness.Close;
 end;
 
