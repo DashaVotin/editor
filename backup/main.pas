@@ -6,26 +6,14 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
-  ExtCtrls, StdCtrls, thickness, Ufigures, Utools;
+  ExtCtrls, StdCtrls, Spin, Ufigures, Utools, UdPoints, Uoptions;
 
 type
 
-  { TFgraphics }
-
   TFgraphics = class(TForm)
-    CDpen: TColorDialog;
-    CDfond: TColorDialog;
-    CDfill: TColorDialog;
     Mannulment: TMenuItem;
     Medit: TMenuItem;
-    Mcolor: TMenuItem;
-    Mfillcolor: TMenuItem;
-    Mfill: TMenuItem;
     Meraseall: TMenuItem;
-    Mthickness: TMenuItem;
-    Mfondcolor: TMenuItem;
-    Mline: TMenuItem;
-    Mshape: TMenuItem;
     Mreturn: TMenuItem;
     Mtrait: TMenuItem;
     Minformation: TMenuItem;
@@ -33,56 +21,70 @@ type
     Mexit: TMenuItem;
     Mfile: TMenuItem;
     Mmenu: TMainMenu;
+    PNzoom: TPanel;
+    PNfigures: TPanel;
     PNtool: TPanel;
     PBdraw: TPaintBox;
+    SEscale: TSpinEdit;
+    PanelOptions: TPanel;
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure MannulmentClick(Sender: TObject);
-    procedure McolorClick(Sender: TObject);
     procedure MeraseallClick(Sender: TObject);
     procedure MexitClick(Sender: TObject);
-    procedure MfillcolorClick(Sender: TObject);
-    procedure MfondcolorClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
-    procedure MthicknessClick(Sender: TObject);
     procedure PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     procedure PBdrawMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawPaint(Sender: TObject);
+    procedure SEscaleChange(Sender: TObject);
     procedure ToolBtnClick(ASender: TObject);
-    procedure ButtonCreate(Fstart, Ffinish: TPoint; num: integer);
+    procedure ButtonCreate(Fstart, Ffinish: TPoint; Num: integer; Aparent: TPanel);
+    procedure CreatePanel;
   private
-    { private declarations }
+
   public
-    { public declarations }
+
   end;
 
 var
   Fgraphics: TFgraphics;
   Drawing: boolean;
-  CurrentWidth: integer;
-  CurrentPenColor, CurrentFontColor, CurrentFillColor: TColor;
-  Figures, CtrlZFigures: array of Tfigure;
+  Figures, RedoFigures: array of Tfigure;
 
 implementation
 
 {$R *.lfm}
 
-{ TFgraphics }
-
 procedure TFgraphics.ToolBtnClick(ASender: TObject);
 begin
   ToolNum := (ASender as TButton).Tag;
+  PanelOptions.Free;
+  CreatePanel;
+  ToolList[ToolNum].Create;
 end;
 
-procedure TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; num: integer);
+procedure TFgraphics.CreatePanel;
+begin
+  PanelOptions := TPanel.Create(Fgraphics);
+  PanelOptions.Parent := Fgraphics.PNtool;
+  PanelOptions.Width := Fgraphics.PNtool.Width;
+  PanelOptions.Left := 0;
+  PanelOptions.Top := Fgraphics.PNfigures.Height;
+  PanelOptions.Height := Fgraphics.PNtool.Height -
+    (Fgraphics.PNzoom.Height + Fgraphics.PNfigures.Height);
+end;
+
+procedure TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
+  Aparent: TPanel);
 var
   button: TButton;
 begin
   button := TButton.Create(Fgraphics);
-  button.Parent := PNtool;
+  button.Parent := Aparent;
   button.Left := Fstart.x;
   button.Top := Fstart.y;
   button.Width := Ffinish.x;
@@ -93,18 +95,38 @@ begin
 end;
 
 procedure TFgraphics.FormCreate(Sender: TObject);
+var
+  i: integer;
 begin
   Drawing := False;
-  CurrentPenColor := clBlack;
-  CurrentFontColor := clWhite;
-  CurrentWidth := 1;
-  SetLength(Figures, 0);
-  SetLength(CtrlZFigures, 0);
+  SetLength(Figures, 1);
+  Brush.Color := clWhite;
+  Figures[0] := Trectangle.Create;
+  Figures[0].Dpoints[0] := ScreenToWorld(Point(0, 0));
+  Figures[0].Dpoints[1] := ScreenToWorld(Point(PBdraw.Width, PBdraw.Height));
+  SetLength(RedoFigures, 0);
   ToolNum := 0;
-  ButtonCreate(Point(10, 10), Point(90, 30), 0);
-  ButtonCreate(Point(10, 50), Point(90, 30), 1);
-  ButtonCreate(Point(10, 90), Point(90, 30), 2);
-  ButtonCreate(Point(10, 130), Point(90, 30), 3);
+  for i := 0 to 4 do
+    ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures);
+  for i := 5 to 6 do
+    ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom);
+  PanelOptions.Free;
+  Uoptions.Round := 10;
+  CreatePanel;
+  ToolList[ToolNum].Create;
+  Offset.X := 0;
+  Offset.Y := 0;
+  Scale := 1;
+  RectScaleWight := PBdraw.Width;
+  RectScaleHeight := PBdraw.Height;
+end;
+
+procedure TFgraphics.FormResize(Sender: TObject);
+begin
+  RectScaleWight := PBdraw.Width;
+  RectScaleHeight := PBdraw.Height;
+  PanelOptions.Height := Fgraphics.PNtool.Height -
+    (Fgraphics.PNzoom.Height + Fgraphics.PNfigures.Height);
 end;
 
 procedure TFgraphics.MexitClick(Sender: TObject);
@@ -112,21 +134,12 @@ begin
   Fgraphics.Close;
 end;
 
-procedure TFgraphics.MfillcolorClick(Sender: TObject);
-begin
-  if CDfill.Execute then
-  begin
-    CurrentFillColor := CDfill.Color;
-    PBdraw.Invalidate;
-  end;
-end;
-
 procedure TFgraphics.MannulmentClick(Sender: TObject);
 begin
-  if Length(Figures) > 0 then
+  if Length(Figures) > 1 then
   begin
-    SetLength(CtrlZFigures, Length(CtrlZFigures) + 1);
-    CtrlZFigures[High(CtrlZFigures)] := Figures[High(Figures)];
+    SetLength(RedoFigures, Length(RedoFigures) + 1);
+    RedoFigures[High(RedoFigures)] := Figures[High(Figures)];
     SetLength(Figures, High(Figures));
   end;
   PBdraw.Invalidate;
@@ -134,44 +147,19 @@ end;
 
 procedure TFgraphics.MreturnClick(Sender: TObject);
 begin
-  if (Length(CtrlZFigures) > 0) and (Length(Figures) >= 0) then
+  if (Length(RedoFigures) > 0) and (Length(Figures) >= 1) then
   begin
     SetLength(Figures, Length(Figures) + 1);
-    Figures[High(Figures)] := CtrlZFigures[High(CtrlZFigures)];
-    SetLength(CtrlZFigures, High(CtrlZFigures));
+    Figures[High(Figures)] := RedoFigures[High(RedoFigures)];
+    SetLength(RedoFigures, High(RedoFigures));
   end;
   PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MeraseallClick(Sender: TObject);
 begin
-  FormCreate(Sender);
+  SetLength(Figures, 1);
   PBdraw.Invalidate;
-end;
-
-procedure TFgraphics.McolorClick(Sender: TObject);
-begin
-  if CDpen.Execute then
-  begin
-    CurrentPenColor := CDpen.Color;
-    PBdraw.Invalidate;
-  end;
-end;
-
-procedure TFgraphics.MthicknessClick(Sender: TObject);
-begin
-  Fthickness.ShowModal;
-  CurrentWidth := ActualThicknes1;
-  PBdraw.Invalidate;
-end;
-
-procedure TFgraphics.MfondcolorClick(Sender: TObject);
-begin
-  if CDfond.Execute then
-  begin
-    CurrentFontColor := CDfond.Color;
-    PBdraw.Invalidate;
-  end;
 end;
 
 procedure TFgraphics.MinformationClick(Sender: TObject);
@@ -185,7 +173,12 @@ begin
   if button = mbLeft then
   begin
     Drawing := True;
-    ToolList[ToolNum].CreateObject(x, y);
+    ToolList[ToolNum].MouseDown(x, y);
+    Figures[High(Figures)].PenColor := Uoptions.PenColor;
+    Figures[High(Figures)].Width := Uoptions.Width;
+    Figures[High(Figures)].FillColor := Uoptions.FillColor;
+    Figures[High(Figures)].Bstyle := Uoptions.Bstyle;
+    Figures[High(Figures)].Round := Uoptions.Round;
   end;
 end;
 
@@ -194,11 +187,8 @@ procedure TFgraphics.PBdrawMouseMove(Sender: TObject; Shift: TShiftState;
 begin
   if (Drawing) then
   begin
-    Figures[High(Figures)].MousMove(x, y);
-    Figures[High(Figures)].PenColor := CurrentPenColor;
-    Figures[High(Figures)].FillColor := CurrentFillColor;
-    Figures[High(Figures)].Width := CurrentWidth;
-    SetLength(CtrlZFigures, 0);
+    ToolList[ToolNum].MouseMove(x, y);
+    SetLength(RedoFigures, 0);
     PBdraw.Invalidate;
   end;
 end;
@@ -207,9 +197,11 @@ procedure TFgraphics.PBdrawMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   if button = mbLeft then
-  begin
-    Drawing := False;
-  end;
+    ToolList[ToolNum].MouseUp(x, y, True);
+  if Button = mbRight then
+    ToolList[ToolNum].MouseUp(x, y, False);
+  Drawing := False;
+  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.PBdrawPaint(Sender: TObject);
@@ -218,13 +210,27 @@ var
 begin
   with PBdraw.Canvas do
   begin
-    Brush.Color := CurrentFontColor;
-    FillRect(0, 0, PBdraw.Width, PBdraw.Height);
+    SEscale.Text := FloatToStr(Scale * 100);
   end;
   for i := 0 to High(Figures) do
-  begin
     Figures[i].Draw(PBdraw.Canvas);
+end;
+
+procedure TFgraphics.SEscaleChange(Sender: TObject);
+var
+  Ascale: double;
+begin
+  try
+    Ascale := StrToFloat(SEscale.Text) / 100;
+    if Ascale > 0 then
+      Scale := Ascale
+    else
+      Scale := 1;
+  except
+    on  EConvertError do
+      Scale := 1;
   end;
+  PBdraw.Invalidate;
 end;
 
 end.
