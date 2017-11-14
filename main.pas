@@ -10,6 +10,8 @@ uses
 
 type
 
+  { TFgraphics }
+
   TFgraphics = class(TForm)
     Mannulment: TMenuItem;
     Medit: TMenuItem;
@@ -25,6 +27,8 @@ type
     PNfigures: TPanel;
     PNtool: TPanel;
     PBdraw: TPaintBox;
+    ScrollBar1: TScrollBar;
+    ScrollBar2: TScrollBar;
     SEscale: TSpinEdit;
     PanelOptions: TPanel;
     procedure FormCreate(Sender: TObject);
@@ -53,18 +57,29 @@ type
 var
   Fgraphics: TFgraphics;
   Drawing: boolean;
-  Figures, RedoFigures: array of Tfigure;
+  RedoFigures: array of Tfigure;
 
 implementation
 
 {$R *.lfm}
 
 procedure TFgraphics.ToolBtnClick(ASender: TObject);
+var
+  i: Toptions;
+  o: array of Toptions;
+  x: TControl;
 begin
   ToolNum := (ASender as TButton).Tag;
-  PanelOptions.Free;
-  CreatePanel;
-  ToolList[ToolNum].Create;
+  PanelOptions.DestroyComponents;
+  // FreeAndNil(PanelOptions);
+  // CreatePanel;
+  //ToolList[ToolNum].Create;
+  o := ToolList[ToolNum].Options;
+  for i in o do
+  begin
+    x := i.ToControls(PanelOptions);
+    x.Align := alTop;
+  end;
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -76,6 +91,8 @@ begin
   PanelOptions.Top := Fgraphics.PNfigures.Height;
   PanelOptions.Height := Fgraphics.PNtool.Height -
     (Fgraphics.PNzoom.Height + Fgraphics.PNfigures.Height);
+  // PanelOptions.Color := clRed;
+
 end;
 
 procedure TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
@@ -110,10 +127,10 @@ begin
     ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures);
   for i := 5 to 6 do
     ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom);
-  PanelOptions.Free;
+  // PanelOptions.Free;
   Uoptions.Round := 10;
   CreatePanel;
-  ToolList[ToolNum].Create;
+  //ToolList[ToolNum].Create;
   Offset.X := 0;
   Offset.Y := 0;
   Scale := 1;
