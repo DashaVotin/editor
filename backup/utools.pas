@@ -131,7 +131,8 @@ begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
   end;
-  //(Figures[High(Figures)] as Tline).PenColor:=gPenColor;
+  (Figures[High(Figures)] as Tline).PenColor:=gPenColor;
+  (Figures[High(Figures)] as Tline).Width:=gWidth;
 end;
 
 procedure TrectangleTool.MouseDown(x, y: integer);
@@ -140,6 +141,10 @@ begin
   Figures[High(Figures)] := Trectangle.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
+  (Figures[High(Figures)] as Trectangle).PenColor:=gPenColor;
+  (Figures[High(Figures)] as Trectangle).Width:=gWidth;
+  (Figures[High(Figures)] as Trectangle).FillColor:=gFillColor;
+  (Figures[High(Figures)] as Trectangle).Bstyle:=gBstyle;
 end;
 
 procedure TroundRectTool.MouseDown(x, y: integer);
@@ -148,6 +153,11 @@ begin
   Figures[High(Figures)] := TroundRect.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
+  (Figures[High(Figures)] as TroundRect).PenColor:=gPenColor;
+  (Figures[High(Figures)] as TroundRect).Width:=gWidth;
+  (Figures[High(Figures)] as TroundRect).FillColor:=gFillColor;
+  (Figures[High(Figures)] as TroundRect).Bstyle:=gBstyle;
+  (Figures[High(Figures)] as TroundRect).Round:=gRound;
 end;
 
 procedure TellipceTool.MouseDown(x, y: integer);
@@ -156,6 +166,10 @@ begin
   Figures[High(Figures)] := Tellipce.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
+  (Figures[High(Figures)] as Tellipce).PenColor:=gPenColor;
+  (Figures[High(Figures)] as Tellipce).Width:=gWidth;
+  (Figures[High(Figures)] as Tellipce).FillColor:=gFillColor;
+  (Figures[High(Figures)] as Tellipce).Bstyle:=gBstyle;
 end;
 
 procedure TpolyLineTool.MouseDown(x, y: integer);

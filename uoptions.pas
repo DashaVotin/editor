@@ -14,43 +14,49 @@ type
     OptionName: string;
     procedure AClick(ASender: TObject); virtual; abstract;
     function ToControls(AParent: TPanel): TControl; virtual; abstract;
+    function ToLabels(Aparent: TPanel): TLabel; //virtual; abstract;
     constructor Create; virtual; abstract;
   end;
 
   TpenColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
+    //  function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   Twidth = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
+    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   TfillColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
+    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   TbrushStyle = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
+    //   function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   Tround = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
+    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
-  var
-    gPenColor, gFillColor: TColor;
-    gWidth, gRound: integer;
-    gBstyle: boolean;
+var
+  gPenColor, gFillColor: TColor;
+  gWidth, gRound: integer;
+  gBstyle: boolean;
 
 implementation
 
@@ -85,42 +91,49 @@ begin
     gWidth := 1;
 end;
 
+constructor TbrushStyle.Create;
+begin
+  OptionName := 'Стиль заливки';
+end;
+
+constructor TpenColor.Create;
+begin
+  OptionName := ' Цвет карандаша';
+end;
+
+constructor TfillColor.Create;
+begin
+  OptionName := 'Цвет заливки';
+end;
+
+constructor Twidth.Create;
+begin
+  OptionName := 'Толщина линии';
+end;
+
+constructor Tround.Create;
+begin
+  gRound := 10;
+  OptionName := 'Сила закругления';
+end;
+
+function Toptions.ToLabels(Aparent: TPanel): TLabel;
+begin
+  Result := TLabel.Create(Aparent);
+  Result.Parent := Aparent;
+  Result.Caption := OptionName;
+end;
+
 function TbrushStyle.ToControls(AParent: Tpanel): TControl;
 begin
   Result := TCheckBox.Create(AParent);
   with Result as TCheckBox do
   begin
     Parent := AParent;
-    Checked:=gBstyle;
+    Checked := gBstyle;
     Caption := 'Заливка';
     OnClick := @AClick;
   end;
-end;
-
-constructor TbrushStyle.Create;
-begin
-  OptionName := 'TbrushStyle';
-end;
-
-constructor TpenColor.Create;
-begin
-  OptionName := 'TpenColor';
-end;
-
-constructor TfillColor.Create;
-begin
-  OptionName := 'TfillColor';
-end;
-
-constructor Twidth.Create;
-begin
-  OptionName := 'Twidth';
-end;
-
-constructor Tround.Create;
-begin
-  gRound := 10;
-  OptionName := 'Tround';
 end;
 
 function TpenColor.ToControls(AParent: Tpanel): TControl;
@@ -129,9 +142,8 @@ begin
   with Result as TColorButton do
   begin
     Parent := AParent;
-    ButtonColor:=gPenColor;
+    ButtonColor := gPenColor;
     OnColorChanged := @AClick;
-    Visible := True;
   end;
 end;
 
@@ -141,7 +153,7 @@ begin
   with Result as TColorButton do
   begin
     Parent := AParent;
-    ButtonColor:=gFillColor;
+    ButtonColor := gFillColor;
     onColorChanged := @AClick;
   end;
 end;
@@ -152,7 +164,7 @@ begin
   with Result as TSpinEdit do
   begin
     Parent := AParent;
-    Text:=IntToStr(gWidth);
+    Text := IntToStr(gWidth);
     OnChange := @AClick;
   end;
 end;
@@ -170,7 +182,7 @@ begin
     //  roundlabel.Width := 50;
     //  roundlabel.Height := 20;
     //  roundlabel.Caption := 'Сила закругления';
-    Text:=IntToStr(gRound);
+    Text := IntToStr(gRound);
     OnChange := @AClick;
   end;
 end;

@@ -47,7 +47,8 @@ type
     procedure PBdrawPaint(Sender: TObject);
     procedure SEscaleChange(Sender: TObject);
     procedure ToolBtnClick(ASender: TObject);
-    function ButtonCreate(Fstart, Ffinish: TPoint; Num: integer; Aparent: TPanel): TButton;
+    function ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
+      Aparent: TPanel): TButton;
     procedure CreatePanel;
   private
 
@@ -72,7 +73,10 @@ begin
   PanelOptions.Free;
   CreatePanel;
   for i := High(ToolList[ToolNum].Options) downto Low(ToolList[ToolNum].Options) do
+    begin
     ToolList[ToolNum].Options[i].ToControls(PanelOptions).Align := alTop;
+    ToolList[ToolNum].Options[i].ToLabels(PanelOptions).Align:=alTop;
+    end;
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -93,14 +97,14 @@ begin
   Result := TButton.Create(Fgraphics);
   with Result do
   begin
-  Parent := Aparent;
-  Left := Fstart.x;
-  Top := Fstart.y;
-  Width := Ffinish.x;
-  Height := Ffinish.y;
-  Tag := Num;
-  OnClick := @ToolBtnClick;
-  Caption := ToolList[Num].ToolName;
+    Parent := Aparent;
+    Left := Fstart.x;
+    Top := Fstart.y;
+    Width := Ffinish.x;
+    Height := Ffinish.y;
+    Tag := Num;
+    OnClick := @ToolBtnClick;
+    Caption := ToolList[Num].ToolName;
   end;
 end;
 
@@ -116,12 +120,12 @@ begin
   Figures[0].Dpoints[1] := ScreenToWorld(Point(PBdraw.Width, PBdraw.Height));
   SetLength(RedoFigures, 0);
   ToolNum := 0;
-  ButtonCreate(Point(10,10),Point(100,30),0,PNfigures).Click;
-  for i := 1 to 4 do
-    ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures).Align:=alNone;
-  for i := 5 to 6 do
-    ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom).Align:=alNone;
   CreatePanel;
+  ButtonCreate(Point(10, 10), Point(100, 30), 0, PNfigures).Click;
+  for i := 1 to 4 do
+    ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures).Align := alNone;
+  for i := 5 to 6 do
+    ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom).Align := alNone;
   Offset.X := 0;
   Offset.Y := 0;
   Scale := 1;

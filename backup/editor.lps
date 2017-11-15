@@ -18,8 +18,9 @@
         <ComponentName Value="Fgraphics"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="57"/>
-        <CursorPos Y="67"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="61"/>
+        <CursorPos X="69" Y="78"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -38,10 +39,9 @@
         <Filename Value="utools.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utools"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="149"/>
-        <CursorPos X="54" Y="167"/>
+        <TopLine Value="167"/>
+        <CursorPos X="57" Y="181"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -51,7 +51,7 @@
         <UnitName Value="UdPoints"/>
         <EditorIndex Value="3"/>
         <CursorPos X="19" Y="13"/>
-        <UsageCount Value="199"/>
+        <UsageCount Value="207"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -59,9 +59,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Uoptions"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="39"/>
-        <CursorPos X="20" Y="54"/>
-        <UsageCount Value="114"/>
+        <TopLine Value="97"/>
+        <CursorPos X="31" Y="146"/>
+        <UsageCount Value="139"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -69,20 +69,20 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2718"/>
         <CursorPos Y="2740"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit6>
       <Unit7>
         <Filename Value="C:\lazarus\lcl\include\wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5365"/>
         <CursorPos Y="5385"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit7>
       <Unit8>
         <Filename Value="Ufigures.pas"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="102"/>
-        <CursorPos X="24" Y="124"/>
+        <TopLine Value="69"/>
+        <CursorPos X="68" Y="94"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit8>
@@ -92,35 +92,35 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1024"/>
         <CursorPos X="3" Y="1036"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="2"/>
       </Unit9>
       <Unit10>
         <Filename Value="C:\lazarus\lcl\include\colorbutton.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos Y="18"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit10>
       <Unit11>
         <Filename Value="C:\lazarus\lcl\include\customedit.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="579"/>
         <CursorPos Y="594"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit11>
       <Unit12>
         <Filename Value="C:\lazarus\lcl\include\buttoncontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="41"/>
         <CursorPos Y="55"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit12>
       <Unit13>
         <Filename Value="C:\lazarus\lcl\include\buttons.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="153"/>
         <CursorPos Y="170"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\lazarus\lcl\lclmessageglue.pas"/>
@@ -128,14 +128,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="91"/>
         <CursorPos Y="123"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit14>
       <Unit15>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32callback.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2577"/>
         <CursorPos Y="2608"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32wsstdctrls.pp"/>
@@ -143,28 +143,28 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1645"/>
         <CursorPos Y="1666"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32object.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="338"/>
         <CursorPos Y="364"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit17>
       <Unit18>
         <Filename Value="C:\lazarus\lcl\include\customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="909"/>
         <CursorPos Y="926"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit18>
       <Unit19>
         <Filename Value="C:\lazarus\lcl\include\spinedit.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="211"/>
         <CursorPos Y="245"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit19>
     </Units>
     <JumpHistory Count="26" HistoryIndex="25">
