@@ -13,89 +13,85 @@ type
   Toptions = class
     OptionName: string;
     procedure AClick(ASender: TObject); virtual; abstract;
-    function ToControls(Parent: TPanel): TControl; virtual; abstract;
+    function ToControls(AParent: TPanel): TControl; virtual; abstract;
     constructor Create; virtual; abstract;
   end;
 
   TpenColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
-    function ToControls(Parent: TPanel): TControl; override;
+    function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   Twidth = class(Toptions)
     procedure AClick(ASender: TObject); override;
-    function ToControls(Parent: TPanel): TControl; override;
+    function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   TfillColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
-    function ToControls(Parent: TPanel): TControl; override;
+    function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   TbrushStyle = class(Toptions)
     procedure AClick(ASender: TObject); override;
-    function ToControls(Parent: TPanel): TControl; override;
+    function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   Tround = class(Toptions)
     procedure AClick(ASender: TObject); override;
-    function ToControls(Parent: TPanel): TControl; override;
+    function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
-var
-  PenColor, FillColor: TColor;
-  Width, Round: integer;
-  Bstyle: boolean;
+  var
+    gPenColor, gFillColor: TColor;
+    gWidth, gRound: integer;
+    gBstyle: boolean;
 
 implementation
 
 procedure TpenColor.AClick(ASender: TObject);
 begin
-  PenColor := (ASender as TColorButton).ButtonColor;
+  gPenColor := (ASender as TColorButton).ButtonColor;
 end;
 
 procedure Tround.AClick(ASender: TObject);
 begin
   if StrToInt((ASender as TSpinEdit).Text) > 0 then
-    Round := StrToInt((ASender as TSpinEdit).Text)
+    gRound := StrToInt((ASender as TSpinEdit).Text)
   else
-    Round := 1;
+    gRound := 1;
 end;
 
 procedure TbrushStyle.AClick(ASender: TObject);
 begin
-  Bstyle := (ASender as TCheckBox).Checked;
+  gBstyle := (ASender as TCheckBox).Checked;
 end;
 
 procedure TfillColor.AClick(ASender: TObject);
 begin
-  FillColor := (ASender as TColorButton).ButtonColor;
+  gFillColor := (ASender as TColorButton).ButtonColor;
 end;
 
 procedure Twidth.AClick(ASender: TObject);
 begin
   if StrToInt((ASender as TSpinEdit).Text) > 0 then
-    Width := StrToInt((ASender as TSpinEdit).Text)
+    gWidth := StrToInt((ASender as TSpinEdit).Text)
   else
-    Width := 1;
+    gWidth := 1;
 end;
 
-function TbrushStyle.ToControls(Parent: Tpanel): TControl;
+function TbrushStyle.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TCheckBox.Create(Parent);
+  Result := TCheckBox.Create(AParent);
   with Result as TCheckBox do
   begin
-    Parent := Parent;
-  {Left := 50;
-  Top := 50;
-  Width := 24;
-  Height := 50; }
-    //Result.Checked := Bstyle;
+    Parent := AParent;
+    Checked:=gBstyle;
     Caption := 'Заливка';
     OnClick := @AClick;
   end;
@@ -123,73 +119,58 @@ end;
 
 constructor Tround.Create;
 begin
+  gRound := 10;
   OptionName := 'Tround';
 end;
 
-function TpenColor.ToControls(Parent: Tpanel): TControl;
+function TpenColor.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TColorButton.Create(Parent);
+  Result := TColorButton.Create(AParent);
   with Result as TColorButton do
   begin
-    Parent := Parent;
-  {Left := 10;
-  Top := 10;
-  Width := 30;
-  Height := 30;   }
-    // Result.ButtonColor := Figures[High(Figures)].PenColor;
+    Parent := AParent;
+    ButtonColor:=gPenColor;
     OnColorChanged := @AClick;
     Visible := True;
   end;
 end;
 
-function TfillColor.ToControls(Parent: Tpanel): TControl;
+function TfillColor.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TColorButton.Create(Parent);
+  Result := TColorButton.Create(AParent);
   with Result as TColorButton do
   begin
-    Parent := Parent;
-  {Left := 10;
-  Top := 50;
-  Width := 30;
-  Height := 30;  }
-    // button.ButtonColor := Figures[High(Figures)].FillColor;
+    Parent := AParent;
+    ButtonColor:=gFillColor;
     onColorChanged := @AClick;
   end;
 end;
 
-function Twidth.ToControls(Parent: Tpanel): TControl;
+function Twidth.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TSpinEdit.Create(Parent);
+  Result := TSpinEdit.Create(AParent);
   with Result as TSpinEdit do
   begin
-    Parent := Parent;
- { Left := 50;
-  Top := 10;
-  Width := 50;
-  Height := 28;   }
-    // edit.Text := IntToStr(Figures[High(Figures)].Width);
+    Parent := AParent;
+    Text:=IntToStr(gWidth);
     OnChange := @AClick;
   end;
 end;
 
-function Tround.ToControls(Parent: Tpanel): TControl;
+function Tround.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TSpinEdit.Create(Parent);
+  Result := TSpinEdit.Create(AParent);
   // roundlabel := TLabel.Create(Parent);
   with Result as TSpinEdit do
   begin
-    Parent := Parent;
-{  Left := 10;
-  Top := 115;
-  Width := 50;
-  Height := 28;    }
-    // roundlabel.Parent := Parent;
+    Parent := AParent;
+    //  roundlabel.Parent := Parent;
     //  roundlabel.Left := 10;
     //  roundlabel.Top := 90;
     //  roundlabel.Width := 50;
     //  roundlabel.Height := 20;
     //  roundlabel.Caption := 'Сила закругления';
-    //  edit.Text := IntToStr(Figures[High(Figures)].Round);
+    Text:=IntToStr(gRound);
     OnChange := @AClick;
   end;
 end;

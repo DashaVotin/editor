@@ -6,35 +6,42 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
-  ExtCtrls, UdPoints;
+  ExtCtrls, UdPoints, Uoptions;
 
 type
 
   Tfigure = class
-    PenColor, FillColor: Tcolor;
-    Width, Round: integer;
-    Bstyle: boolean;
     Dpoints: array of TdoublePoint;
     FigureName: string;
     procedure Draw(Acanvas: Tcanvas); virtual; abstract;
   end;
 
   Tline = class(Tfigure)
+    PenColor: TColor;
+    Width: integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Trectangle = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tellipce = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tpolyline = class(Tfigure)
+    PenColor: TColor;
+    Width: integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -45,6 +52,9 @@ type
   end;
 
   TroundRect = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width, Round: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;

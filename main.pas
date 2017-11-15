@@ -38,6 +38,7 @@ type
     procedure MexitClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
+    procedure PBdrawClick(Sender: TObject);
     procedure PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
@@ -46,7 +47,7 @@ type
     procedure PBdrawPaint(Sender: TObject);
     procedure SEscaleChange(Sender: TObject);
     procedure ToolBtnClick(ASender: TObject);
-    procedure ButtonCreate(Fstart, Ffinish: TPoint; Num: integer; Aparent: TPanel);
+    function ButtonCreate(Fstart, Ffinish: TPoint; Num: integer; Aparent: TPanel): TButton;
     procedure CreatePanel;
   private
 
@@ -65,21 +66,13 @@ implementation
 
 procedure TFgraphics.ToolBtnClick(ASender: TObject);
 var
-  i: Toptions;
-  o: array of Toptions;
-  x: TControl;
+  i: integer;
 begin
   ToolNum := (ASender as TButton).Tag;
-  PanelOptions.DestroyComponents;
-  // FreeAndNil(PanelOptions);
-  // CreatePanel;
-  //ToolList[ToolNum].Create;
-  o := ToolList[ToolNum].Options;
-  for i in o do
-  begin
-    x := i.ToControls(PanelOptions);
-    x.Align := alTop;
-  end;
+  PanelOptions.Free;
+  CreatePanel;
+  for i := High(ToolList[ToolNum].Options) downto Low(ToolList[ToolNum].Options) do
+    ToolList[ToolNum].Options[i].ToControls(PanelOptions).Align := alTop;
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -92,23 +85,23 @@ begin
   PanelOptions.Height := Fgraphics.PNtool.Height -
     (Fgraphics.PNzoom.Height + Fgraphics.PNfigures.Height);
   // PanelOptions.Color := clRed;
-
 end;
 
-procedure TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
-  Aparent: TPanel);
-var
-  button: TButton;
+function TFgraphics.ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
+  Aparent: TPanel): TButton;
 begin
-  button := TButton.Create(Fgraphics);
-  button.Parent := Aparent;
-  button.Left := Fstart.x;
-  button.Top := Fstart.y;
-  button.Width := Ffinish.x;
-  button.Height := Ffinish.y;
-  button.Tag := Num;
-  button.OnClick := @ToolBtnClick;
-  button.Caption := ToolList[Num].ToolName;
+  Result := TButton.Create(Fgraphics);
+  with Result do
+  begin
+  Parent := Aparent;
+  Left := Fstart.x;
+  Top := Fstart.y;
+  Width := Ffinish.x;
+  Height := Ffinish.y;
+  Tag := Num;
+  OnClick := @ToolBtnClick;
+  Caption := ToolList[Num].ToolName;
+  end;
 end;
 
 procedure TFgraphics.FormCreate(Sender: TObject);
@@ -123,14 +116,12 @@ begin
   Figures[0].Dpoints[1] := ScreenToWorld(Point(PBdraw.Width, PBdraw.Height));
   SetLength(RedoFigures, 0);
   ToolNum := 0;
-  for i := 0 to 4 do
-    ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures);
-  for i := 5 to 6 do
-    ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom);
-  // PanelOptions.Free;
-  Uoptions.Round := 10;
   CreatePanel;
-  //ToolList[ToolNum].Create;
+  ButtonCreate(Point(10,10),Point(100,30),0,PNfigures).Click;
+  for i := 1 to 4 do
+    ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures).Align:=alNone;
+  for i := 5 to 6 do
+    ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom).Align:=alNone;
   Offset.X := 0;
   Offset.Y := 0;
   Scale := 1;
@@ -173,6 +164,11 @@ begin
   PBdraw.Invalidate;
 end;
 
+procedure TFgraphics.PBdrawClick(Sender: TObject);
+begin
+
+end;
+
 procedure TFgraphics.MeraseallClick(Sender: TObject);
 begin
   SetLength(Figures, 1);
@@ -191,11 +187,11 @@ begin
   begin
     Drawing := True;
     ToolList[ToolNum].MouseDown(x, y);
-    Figures[High(Figures)].PenColor := Uoptions.PenColor;
+   { Figures[High(Figures)].PenColor := Uoptions.PenColor;
     Figures[High(Figures)].Width := Uoptions.Width;
     Figures[High(Figures)].FillColor := Uoptions.FillColor;
     Figures[High(Figures)].Bstyle := Uoptions.Bstyle;
-    Figures[High(Figures)].Round := Uoptions.Round;
+    Figures[High(Figures)].Round := Uoptions.Round;      }
   end;
 end;
 

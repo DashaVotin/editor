@@ -1,11 +1,11 @@
 object Fgraphics: TFgraphics
-  Left = 55
+  Left = 8
   Height = 516
-  Top = 299
-  Width = 531
+  Top = 149
+  Width = 434
   Caption = 'Графический редактор'
   ClientHeight = 491
-  ClientWidth = 531
+  ClientWidth = 434
   Menu = Mmenu
   OnCreate = FormCreate
   OnResize = FormResize
@@ -21,8 +21,9 @@ object Fgraphics: TFgraphics
     Left = 120
     Height = 473
     Top = 0
-    Width = 392
+    Width = 296
     Anchors = [akTop, akLeft, akRight, akBottom]
+    OnClick = PBdrawClick
     OnMouseDown = PBdrawMouseDown
     OnMouseMove = PBdrawMouseMove
     OnMouseUp = PBdrawMouseUp
@@ -69,15 +70,14 @@ object Fgraphics: TFgraphics
   object ScrollBar1: TScrollBar
     AnchorSideLeft.Control = PNtool
     AnchorSideLeft.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
+    AnchorSideRight.Control = ScrollBar2
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 120
     Height = 18
     Top = 473
-    Width = 392
-    Anchors = [akLeft, akBottom]
+    Width = 296
+    Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 1
   end
@@ -89,11 +89,11 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 512
+    Left = 416
     Height = 491
     Top = 0
-    Width = 19
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Width = 18
+    Anchors = [akTop, akRight, akBottom]
     Kind = sbVertical
     PageSize = 0
     TabOrder = 2

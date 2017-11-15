@@ -131,6 +131,7 @@ begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
   end;
+  //(Figures[High(Figures)] as Tline).PenColor:=gPenColor;
 end;
 
 procedure TrectangleTool.MouseDown(x, y: integer);
@@ -162,6 +163,8 @@ begin
   SetLength(Figures, Length(Figures) + 1);
   Figures[High(Figures)] := TpolyLine.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
+  (Figures[High(Figures)] as Tpolyline).PenColor:=gPenColor;
+  (Figures[High(Figures)] as Tpolyline).Width:=gWidth;
 end;
 
 procedure TloupeTool.MouseDown(x, y: integer);
@@ -192,48 +195,48 @@ end;
 constructor TlineTool.Create;
 begin
   ToolName := 'Прямая';
-  SetLength(Options,2);
-  Options[0]:=TpenColor.Create;
-  Options[1]:=Twidth.Create;
+  SetLength(Options, 2);
+  Options[0] := TpenColor.Create;
+  Options[1] := Twidth.Create;
 end;
 
 constructor TrectangleTool.Create;
 begin
   ToolName := 'Прямоугольник';
-  SetLength(Options,4);
-  Options[0]:=TpenColor.Create;
-  Options[1]:=Twidth.Create;
-  Options[2]:=TfillColor.Create;
-  Options[3]:=TbrushStyle.Create;
+  SetLength(Options, 4);
+  Options[0] := TpenColor.Create;
+  Options[1] := Twidth.Create;
+  Options[2] := TfillColor.Create;
+  Options[3] := TbrushStyle.Create;
 end;
 
 constructor TroundRectTool.Create;
 begin
   ToolName := 'Круглый квадрат';
-  SetLength(Options,5);
-  Options[0]:=TpenColor.Create;
-  Options[1]:=Twidth.Create;
-  Options[2]:=TfillColor.Create;
-  Options[3]:=TbrushStyle.Create;
-  Options[4]:=Tround.Create;
+  SetLength(Options, 5);
+  Options[0] := TpenColor.Create;
+  Options[1] := Twidth.Create;
+  Options[2] := TfillColor.Create;
+  Options[3] := TbrushStyle.Create;
+  Options[4] := Tround.Create;
 end;
 
 constructor TellipceTool.Create;
 begin
   ToolName := 'Эллипс';
-  SetLength(Options,4);
-  Options[0]:=TpenColor.Create;
-  Options[1]:=Twidth.Create;
-  Options[2]:=TfillColor.Create;
-  Options[3]:=TbrushStyle.Create;
+  SetLength(Options, 4);
+  Options[0] := TpenColor.Create;
+  Options[1] := Twidth.Create;
+  Options[2] := TfillColor.Create;
+  Options[3] := TbrushStyle.Create;
 end;
 
 constructor TpolyLineTool.Create;
 begin
   ToolName := 'Карандаш';
-  SetLength(Options,2);
-  Options[0]:=TpenColor.Create;
-  Options[1]:=Twidth.Create;
+  SetLength(Options, 2);
+  Options[0] := TpenColor.Create;
+  Options[1] := Twidth.Create;
 end;
 
 procedure RegisterTool(ATool: TTools);

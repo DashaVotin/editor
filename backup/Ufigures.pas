@@ -11,30 +11,37 @@ uses
 type
 
   Tfigure = class
-    PenColor, FillColor: Tcolor;
-    Width, Round: integer;
-    Bstyle: boolean;
     Dpoints: array of TdoublePoint;
     FigureName: string;
     procedure Draw(Acanvas: Tcanvas); virtual; abstract;
   end;
 
   Tline = class(Tfigure)
+    PenColor: TColor;
+    Width: integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Trectangle = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tellipce = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tpolyline = class(Tfigure)
+    PenColor: TColor;
+    Width: integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -45,6 +52,9 @@ type
   end;
 
   TroundRect = class(Tfigure)
+    PenColor, FillColor: TColor;
+    Width, Round: integer;
+    Bstyle: boolean;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -53,35 +63,35 @@ implementation
 
 procedure Tline.Draw(Acanvas: TCanvas);
 begin
-  Acanvas.Pen.Color := PenColor;
-  Acanvas.Pen.Width := Width;
+//  Acanvas.Pen.Color := PenColor;
+ // Acanvas.Pen.Width := Width;
   Acanvas.Line(WorldToScreen(Dpoints[0]), WorldToScreen(Dpoints[1]));
 end;
 
 procedure Trectangle.Draw(Acanvas: TCanvas);
 begin
-  Acanvas.Pen.Color := PenColor;
-  Acanvas.Brush.Color := FillColor;
-  Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+ // Acanvas.Pen.Color := PenColor;
+//  Acanvas.Brush.Color := FillColor;
+//  Acanvas.Pen.Width := Width;
+//  if Bstyle then
+ //   Acanvas.Brush.Style := bsSolid
+ // else
+//    Acanvas.Brush.Style := bsClear;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
     WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y);
 end;
 
 procedure TroundRect.Draw(Acanvas: TCanvas);
 begin
-  Acanvas.Pen.Color := PenColor;
-  Acanvas.Brush.Color := FillColor;
-  Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+//  Acanvas.Pen.Color := PenColor;
+//  Acanvas.Brush.Color := FillColor;
+//  Acanvas.Pen.Width := Width;
+//  if Bstyle then
+//    Acanvas.Brush.Style := bsSolid
+//  else
+ //   Acanvas.Brush.Style := bsClear;
   Acanvas.RoundRect(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
-    WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y, Round, Round);
+    WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y, gRound, gRound);
 end;
 
 procedure Tloupe.Draw(Acanvas: TCanvas);
@@ -95,13 +105,13 @@ end;
 
 procedure Tellipce.Draw(Acanvas: TCanvas);
 begin
-  Acanvas.Pen.Color := PenColor;
-  Acanvas.Brush.Color := FillColor;
-  Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+//  Acanvas.Pen.Color := PenColor;
+//  Acanvas.Brush.Color := FillColor;
+//  Acanvas.Pen.Width := Width;
+//  if Bstyle then
+//    Acanvas.Brush.Style := bsSolid
+//  else
+//    Acanvas.Brush.Style := bsClear;
   Acanvas.Ellipse(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
     WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y);
 end;
