@@ -11,41 +11,34 @@ uses
 type
 
   Tfigure = class
+    PenColor: TColor;
+    Width: integer;
+    Pstyle: TPenStyle;
     Dpoints: array of TdoublePoint;
     FigureName: string;
     procedure Draw(Acanvas: Tcanvas); virtual; abstract;
   end;
 
   Tline = class(Tfigure)
-    PenColor: TColor;
-    Width: integer;
-    Pstyle: TPenStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Trectangle = class(Tfigure)
-    PenColor, FillColor: TColor;
-    Width: integer;
+    FillColor: TColor;
     Bstyle: TBrushStyle;
-    Pstyle: TPenStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tellipce = class(Tfigure)
-    PenColor, FillColor: TColor;
-    Width: integer;
+    FillColor: TColor;
     Bstyle: TBrushStyle;
-    Pstyle: TPenStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
 
   Tpolyline = class(Tfigure)
-    PenColor: TColor;
-    Width: integer;
-    Pstyle: TPenStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -56,10 +49,9 @@ type
   end;
 
   TroundRect = class(Tfigure)
-    PenColor, FillColor: TColor;
-    Width, Round: integer;
+    FillColor: TColor;
+    Round: integer;
     Bstyle: TBrushStyle;
-    Pstyle: TPenStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;

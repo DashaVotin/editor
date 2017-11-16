@@ -113,6 +113,10 @@ object Fgraphics: TFgraphics
     end
     object Medit: TMenuItem
       Caption = 'Правка'
+      object Mhome: TMenuItem
+        Caption = 'Показать все'
+        OnClick = MhomeClick
+      end
       object Mannulment: TMenuItem
         Caption = 'Отменить'
         OnClick = MannulmentClick

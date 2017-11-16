@@ -17,13 +17,26 @@ function ScreenToWorld(Apoint: TPoint): TdoublePoint;
 function WorldToScreen(AdoublePoint: TdoublePoint): TPoint;
 procedure ToPointScale(AdPoint: TdoublePoint);
 procedure RectScale(Amin, Amax: TdoublePoint);
+procedure MaxMin(maxx, minx, maxy, miny: double);
 
 var
-  Offset: TdoublePoint;
+  Offset, MaxPoint, MinPoint: TdoublePoint;
   Scale: double;
   RectScaleHeight, RectScaleWight: integer;
 
 implementation
+
+procedure MaxMin(maxx, minx, maxy, miny: double);
+begin
+  if maxx > MaxPoint.X then
+    MaxPoint.x := maxx;
+  if minx < MinPoint.x then
+    MinPoint.x := minx;
+  if maxy > MaxPoint.y then
+    MaxPoint.y := maxy;
+  if miny < MinPoint.y then
+    MinPoint.y := miny;
+end;
 
 procedure RectScale(Amin, Amax: TdoublePoint);
 begin

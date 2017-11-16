@@ -89,8 +89,29 @@ begin
 end;
 
 procedure Ttools.MouseUp(x, y: integer; Left: boolean);
+var
+  max, min: TdoublePoint;
+  i: integer;
 begin
-
+  with Figures[High(Figures)] do
+  begin
+    max.X := Dpoints[0].X;
+    max.Y := Dpoints[0].Y;
+    min.X := Dpoints[0].X;
+    min.y := Dpoints[0].Y;
+    for i := 1 to High(Dpoints) do
+    begin
+      if Dpoints[i].X > max.X then
+        max.X := Dpoints[i].X;
+      if Dpoints[i].y > max.y then
+        max.y := Dpoints[i].y;
+      if Dpoints[i].X < min.X then
+        min.X := Dpoints[i].X;
+      if Dpoints[i].y < min.y then
+        min.y := Dpoints[i].y;
+    end;
+  end;
+  MaxMin(max.X, min.x, max.y, min.y);
 end;
 
 procedure ThandTool.MouseUp(x, y: integer; Left: boolean);
@@ -130,60 +151,72 @@ begin
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
+    PenColor := gPenColor;
+    Width := gWidth;
+    Pstyle := gPstyle.Akind;
   end;
-  (Figures[High(Figures)] as Tline).PenColor := gPenColor;
-  (Figures[High(Figures)] as Tline).Width := gWidth;
-  (Figures[High(Figures)] as Tline).Pstyle := gPstyle.Akind;
 end;
 
 procedure TrectangleTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
   Figures[High(Figures)] := Trectangle.Create;
-  Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
-  Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
-  (Figures[High(Figures)] as Trectangle).PenColor := gPenColor;
-  (Figures[High(Figures)] as Trectangle).Width := gWidth;
+  with Figures[High(Figures)] do
+  begin
+    Dpoints[0] := ScreenToWorld(Point(x, y));
+    Dpoints[1] := ScreenToWorld(Point(x, y));
+    PenColor := gPenColor;
+    Width := gWidth;
+    Pstyle := gPstyle.Akind;
+  end;
   (Figures[High(Figures)] as Trectangle).FillColor := gFillColor;
   (Figures[High(Figures)] as Trectangle).Bstyle := gBstyle.AStyle;
-  (Figures[High(Figures)] as Trectangle).Pstyle := gPstyle.Akind;
 end;
 
 procedure TroundRectTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
   Figures[High(Figures)] := TroundRect.Create;
-  Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
-  Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
-  (Figures[High(Figures)] as TroundRect).PenColor := gPenColor;
-  (Figures[High(Figures)] as TroundRect).Width := gWidth;
+  with Figures[High(Figures)] do
+  begin
+    Dpoints[0] := ScreenToWorld(Point(x, y));
+    Dpoints[1] := ScreenToWorld(Point(x, y));
+    PenColor := gPenColor;
+    Width := gWidth;
+    Pstyle := gPstyle.Akind;
+  end;
   (Figures[High(Figures)] as TroundRect).FillColor := gFillColor;
   (Figures[High(Figures)] as TroundRect).Bstyle := gBstyle.AStyle;
   (Figures[High(Figures)] as TroundRect).Round := gRound;
-  (Figures[High(Figures)] as TroundRect).Pstyle := gPstyle.Akind;
 end;
 
 procedure TellipceTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
   Figures[High(Figures)] := Tellipce.Create;
-  Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
-  Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
-  (Figures[High(Figures)] as Tellipce).PenColor := gPenColor;
-  (Figures[High(Figures)] as Tellipce).Width := gWidth;
+  with Figures[High(Figures)] do
+  begin
+    Dpoints[0] := ScreenToWorld(Point(x, y));
+    Dpoints[1] := ScreenToWorld(Point(x, y));
+    PenColor := gPenColor;
+    Width := gWidth;
+    Pstyle := gPstyle.Akind;
+  end;
   (Figures[High(Figures)] as Tellipce).FillColor := gFillColor;
   (Figures[High(Figures)] as Tellipce).Bstyle := gBstyle.AStyle;
-  (Figures[High(Figures)] as Tellipce).Pstyle := gPstyle.Akind;
 end;
 
 procedure TpolyLineTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
   Figures[High(Figures)] := TpolyLine.Create;
-  Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
-  (Figures[High(Figures)] as Tpolyline).PenColor := gPenColor;
-  (Figures[High(Figures)] as Tpolyline).Width := gWidth;
-  (Figures[High(Figures)] as Tpolyline).Pstyle := gPstyle.Akind;
+  with Figures[High(Figures)] do
+  begin
+    Dpoints[0] := ScreenToWorld(Point(x, y));
+    PenColor := gPenColor;
+    Width := gWidth;
+    Pstyle := gPstyle.Akind;
+  end;
 end;
 
 procedure TloupeTool.MouseDown(x, y: integer);

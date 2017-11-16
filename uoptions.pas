@@ -112,10 +112,10 @@ begin
     if StrToInt((ASender as TSpinEdit).Text) > 0 then
       gWidth := StrToInt((ASender as TSpinEdit).Text)
     else
-      begin
+    begin
       gWidth := 1;
       (ASender as TSpinEdit).Text := '1';
-      end;
+    end;
   except
     on  EConvertError do
     begin

@@ -15,6 +15,7 @@ type
   TFgraphics = class(TForm)
     Mannulment: TMenuItem;
     Medit: TMenuItem;
+    Mhome: TMenuItem;
     Meraseall: TMenuItem;
     Mreturn: TMenuItem;
     Mtrait: TMenuItem;
@@ -36,6 +37,7 @@ type
     procedure MannulmentClick(Sender: TObject);
     procedure MeraseallClick(Sender: TObject);
     procedure MexitClick(Sender: TObject);
+    procedure MhomeClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
     procedure PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
@@ -143,6 +145,12 @@ end;
 procedure TFgraphics.MexitClick(Sender: TObject);
 begin
   Fgraphics.Close;
+end;
+
+procedure TFgraphics.MhomeClick(Sender: TObject);
+begin
+  RectScale(MinPoint, MaxPoint);
+  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MannulmentClick(Sender: TObject);
