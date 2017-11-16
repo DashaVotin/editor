@@ -10,46 +10,48 @@ uses
 
 type
 
+  RbrushStyles = record
+    NameStyle: string;
+    AStyle: TBrushStyle;
+  end;
+
   Toptions = class
     OptionName: string;
     procedure AClick(ASender: TObject); virtual; abstract;
     function ToControls(AParent: TPanel): TControl; virtual; abstract;
-    function ToLabels(Aparent: TPanel): TLabel; //virtual; abstract;
+    function ToLabels(Aparent: TPanel): TLabel;
     constructor Create; virtual; abstract;
   end;
 
   TpenColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
-    //  function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   Twidth = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
-    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   TfillColor = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
-    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   TbrushStyle = class(Toptions)
+    iFill: integer;
+    Styles: array[0..7] of RbrushStyles;
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
-    //   function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
   Tround = class(Toptions)
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
-    // function ToLabels(Aparent: TPanel): TLabel; override;
     constructor Create; override;
   end;
 
@@ -94,6 +96,14 @@ end;
 constructor TbrushStyle.Create;
 begin
   OptionName := 'Стиль заливки';
+  Styles[0].AStyle:=bsSolid; Styles[0].NameStyle:='Полная';
+  Styles[1].AStyle:=bsClear; Styles[1].NameStyle:='Пустая';
+  Styles[2].AStyle:=bsHorizontal; Styles[2].NameStyle:='Горизонтали';
+  Styles[3].AStyle:=bsVertical; Styles[3].NameStyle:='Вертикали';
+  Styles[4].AStyle:=bsFDiagonal; Styles[4].NameStyle:='Диагонали /';
+  Styles[5].AStyle:=bsBDiagonal; Styles[5].NameStyle:='Диагонали \';
+  Styles[6].AStyle:=bsCross; Styles[6].NameStyle:='Клетка';
+  Styles[7].AStyle:=bsDiagCross; Styles[7].NameStyle:='Ромбы';
 end;
 
 constructor TpenColor.Create;
@@ -126,12 +136,11 @@ end;
 
 function TbrushStyle.ToControls(AParent: Tpanel): TControl;
 begin
-  Result := TCheckBox.Create(AParent);
-  with Result as TCheckBox do
+  Result := TComboBox.Create(AParent);
+  with Result as TComboBox do
   begin
     Parent := AParent;
-    Checked := gBstyle;
-    Caption := 'Заливка';
+    /////////////////////////////////////////////
     OnClick := @AClick;
   end;
 end;

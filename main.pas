@@ -191,11 +191,6 @@ begin
   begin
     Drawing := True;
     ToolList[ToolNum].MouseDown(x, y);
-   { Figures[High(Figures)].PenColor := Uoptions.PenColor;
-    Figures[High(Figures)].Width := Uoptions.Width;
-    Figures[High(Figures)].FillColor := Uoptions.FillColor;
-    Figures[High(Figures)].Bstyle := Uoptions.Bstyle;
-    Figures[High(Figures)].Round := Uoptions.Round;      }
   end;
 end;
 
