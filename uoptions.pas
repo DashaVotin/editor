@@ -13,6 +13,13 @@ type
   RfillStyles = record
     NameStyle: string;
     AStyle: TBrushStyle;
+    AIndex: integer;
+  end;
+
+  RpenKind = record
+    NameKind: string;
+    Akind: TPenStyle;
+    AIndex: integer;
   end;
 
   Toptions = class
@@ -42,8 +49,14 @@ type
   end;
 
   TfillStyle = class(Toptions)
-    iFill: integer;
     Styles: array[0..7] of RfillStyles;
+    procedure AClick(ASender: TObject); override;
+    function ToControls(AParent: TPanel): TControl; override;
+    constructor Create; override;
+  end;
+
+  TpenKind = class(Toptions)
+    Kinds: array[0..5] of RpenKind;
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
@@ -58,7 +71,8 @@ type
 var
   gPenColor, gFillColor: TColor;
   gWidth, gRound: integer;
-  gBstyle: TBrushStyle;
+  gBstyle: RfillStyles;
+  gPstyle: RpenKind;
 
 implementation
 
@@ -77,7 +91,14 @@ end;
 
 procedure TfillStyle.AClick(ASender: TObject);
 begin
-  gBstyle:=Styles[(ASender as TComboBox).ItemIndex].AStyle;
+  gBstyle.AStyle := Styles[(ASender as TComboBox).ItemIndex].AStyle;
+  gBstyle.AIndex := (ASender as TComboBox).ItemIndex;
+end;
+
+procedure TpenKind.AClick(ASender: TObject);
+begin
+  gPstyle.Akind := Kinds[(ASender as TComboBox).ItemIndex].Akind;
+  gPstyle.AIndex := (ASender as TComboBox).ItemIndex;
 end;
 
 procedure TfillColor.AClick(ASender: TObject);
@@ -96,14 +117,39 @@ end;
 constructor TfillStyle.Create;
 begin
   OptionName := 'Стиль заливки';
-  Styles[0].AStyle:=bsSolid; Styles[0].NameStyle:='Полная';
-  Styles[1].AStyle:=bsClear; Styles[1].NameStyle:='Пустая';
-  Styles[2].AStyle:=bsHorizontal; Styles[2].NameStyle:='Горизонтали';
-  Styles[3].AStyle:=bsVertical; Styles[3].NameStyle:='Вертикали';
-  Styles[4].AStyle:=bsFDiagonal; Styles[4].NameStyle:='Диагонали \';
-  Styles[5].AStyle:=bsBDiagonal; Styles[5].NameStyle:='Диагонали /';
-  Styles[6].AStyle:=bsCross; Styles[6].NameStyle:='Клетка';
-  Styles[7].AStyle:=bsDiagCross; Styles[7].NameStyle:='Ромбы';
+  Styles[0].AStyle := bsSolid;
+  Styles[0].NameStyle := 'Полная';
+  Styles[1].AStyle := bsClear;
+  Styles[1].NameStyle := 'Пустая';
+  Styles[2].AStyle := bsHorizontal;
+  Styles[2].NameStyle := 'Горизонтали';
+  Styles[3].AStyle := bsVertical;
+  Styles[3].NameStyle := 'Вертикали';
+  Styles[4].AStyle := bsFDiagonal;
+  Styles[4].NameStyle := 'Диагонали \';
+  Styles[5].AStyle := bsBDiagonal;
+  Styles[5].NameStyle := 'Диагонали /';
+  Styles[6].AStyle := bsCross;
+  Styles[6].NameStyle := 'Клетка';
+  Styles[7].AStyle := bsDiagCross;
+  Styles[7].NameStyle := 'Ромбы';
+end;
+
+constructor TpenKind.Create;
+begin
+  OptionName := 'Стиль линии';
+  Kinds[0].AKind := psSolid;
+  Kinds[0].NameKind := 'Обычная';
+  Kinds[1].AKind := psClear;
+  Kinds[1].NameKind := 'Без линии';
+  Kinds[2].AKind := psDash;
+  Kinds[2].NameKind := 'Пунктир';
+  Kinds[3].AKind := psDashDot;
+  Kinds[3].NameKind := 'Пунктир+точка';
+  Kinds[4].AKind := psDashDotDot;
+  Kinds[4].NameKind := 'Пунктир+2точки';
+  Kinds[5].AKind := psDot;
+  Kinds[5].NameKind := 'Точки';
 end;
 
 constructor TpenColor.Create;
@@ -135,15 +181,31 @@ begin
 end;
 
 function TfillStyle.ToControls(AParent: Tpanel): TControl;
-var i:integer;
+var
+  i: integer;
 begin
   Result := TComboBox.Create(AParent);
   with Result as TComboBox do
   begin
     Parent := AParent;
-    for i:=0 to 7 do
-    Items.Add(Styles[i].NameStyle);
-    ItemIndex:=0;
+    for i := 0 to 7 do
+      Items.Add(Styles[i].NameStyle);
+    ItemIndex := gBstyle.AIndex;
+    OnChange := @AClick;
+  end;
+end;
+
+function TpenKind.ToControls(AParent: Tpanel): TControl;
+var
+  i: integer;
+begin
+  Result := TComboBox.Create(AParent);
+  with Result as TComboBox do
+  begin
+    Parent := AParent;
+    for i := 0 to 5 do
+      Items.Add(Kinds[i].NameKind);
+    ItemIndex := gPstyle.AIndex;
     OnChange := @AClick;
   end;
 end;
@@ -184,16 +246,9 @@ end;
 function Tround.ToControls(AParent: Tpanel): TControl;
 begin
   Result := TSpinEdit.Create(AParent);
-  // roundlabel := TLabel.Create(Parent);
   with Result as TSpinEdit do
   begin
     Parent := AParent;
-    //  roundlabel.Parent := Parent;
-    //  roundlabel.Left := 10;
-    //  roundlabel.Top := 90;
-    //  roundlabel.Width := 50;
-    //  roundlabel.Height := 20;
-    //  roundlabel.Caption := 'Сила закругления';
     Text := IntToStr(gRound);
     OnChange := @AClick;
   end;

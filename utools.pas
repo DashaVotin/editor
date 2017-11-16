@@ -133,6 +133,7 @@ begin
   end;
   (Figures[High(Figures)] as Tline).PenColor := gPenColor;
   (Figures[High(Figures)] as Tline).Width := gWidth;
+  (Figures[High(Figures)] as Tline).Pstyle := gPstyle.Akind;
 end;
 
 procedure TrectangleTool.MouseDown(x, y: integer);
@@ -144,7 +145,8 @@ begin
   (Figures[High(Figures)] as Trectangle).PenColor := gPenColor;
   (Figures[High(Figures)] as Trectangle).Width := gWidth;
   (Figures[High(Figures)] as Trectangle).FillColor := gFillColor;
-  (Figures[High(Figures)] as Trectangle).Bstyle := gBstyle;
+  (Figures[High(Figures)] as Trectangle).Bstyle := gBstyle.AStyle;
+  (Figures[High(Figures)] as Trectangle).Pstyle := gPstyle.Akind;
 end;
 
 procedure TroundRectTool.MouseDown(x, y: integer);
@@ -156,8 +158,9 @@ begin
   (Figures[High(Figures)] as TroundRect).PenColor := gPenColor;
   (Figures[High(Figures)] as TroundRect).Width := gWidth;
   (Figures[High(Figures)] as TroundRect).FillColor := gFillColor;
-  (Figures[High(Figures)] as TroundRect).Bstyle := gBstyle;
+  (Figures[High(Figures)] as TroundRect).Bstyle := gBstyle.AStyle;
   (Figures[High(Figures)] as TroundRect).Round := gRound;
+  (Figures[High(Figures)] as TroundRect).Pstyle := gPstyle.Akind;
 end;
 
 procedure TellipceTool.MouseDown(x, y: integer);
@@ -169,7 +172,8 @@ begin
   (Figures[High(Figures)] as Tellipce).PenColor := gPenColor;
   (Figures[High(Figures)] as Tellipce).Width := gWidth;
   (Figures[High(Figures)] as Tellipce).FillColor := gFillColor;
-  (Figures[High(Figures)] as Tellipce).Bstyle := gBstyle;
+  (Figures[High(Figures)] as Tellipce).Bstyle := gBstyle.AStyle;
+  (Figures[High(Figures)] as Tellipce).Pstyle := gPstyle.Akind;
 end;
 
 procedure TpolyLineTool.MouseDown(x, y: integer);
@@ -179,6 +183,7 @@ begin
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   (Figures[High(Figures)] as Tpolyline).PenColor := gPenColor;
   (Figures[High(Figures)] as Tpolyline).Width := gWidth;
+  (Figures[High(Figures)] as Tpolyline).Pstyle := gPstyle.Akind;
 end;
 
 procedure TloupeTool.MouseDown(x, y: integer);
@@ -209,48 +214,53 @@ end;
 constructor TlineTool.Create;
 begin
   ToolName := 'Прямая';
-  SetLength(Options, 2);
+  SetLength(Options, 3);
   Options[0] := TpenColor.Create;
-  Options[1] := Twidth.Create;
+  Options[1] := TpenKind.Create;
+  Options[2] := Twidth.Create;
 end;
 
 constructor TrectangleTool.Create;
 begin
   ToolName := 'Прямоугольник';
-  SetLength(Options, 4);
+  SetLength(Options, 5);
   Options[0] := TpenColor.Create;
-  Options[1] := Twidth.Create;
-  Options[2] := TfillColor.Create;
-  Options[3] := TfillStyle.Create;
+  Options[1] := TpenKind.Create;
+  Options[2] := Twidth.Create;
+  Options[3] := TfillColor.Create;
+  Options[4] := TfillStyle.Create;
 end;
 
 constructor TroundRectTool.Create;
 begin
   ToolName := 'Круглый квадрат';
-  SetLength(Options, 5);
+  SetLength(Options, 6);
   Options[0] := TpenColor.Create;
-  Options[1] := Twidth.Create;
-  Options[2] := TfillColor.Create;
-  Options[3] := TfillStyle.Create;
-  Options[4] := Tround.Create;
+  Options[1] := TpenKind.Create;
+  Options[2] := Twidth.Create;
+  Options[3] := TfillColor.Create;
+  Options[4] := TfillStyle.Create;
+  Options[5] := Tround.Create;
 end;
 
 constructor TellipceTool.Create;
 begin
   ToolName := 'Эллипс';
-  SetLength(Options, 4);
+  SetLength(Options, 5);
   Options[0] := TpenColor.Create;
-  Options[1] := Twidth.Create;
-  Options[2] := TfillColor.Create;
-  Options[3] := TfillStyle.Create;
+  Options[1] := TpenKind.Create;
+  Options[2] := Twidth.Create;
+  Options[3] := TfillColor.Create;
+  Options[4] := TfillStyle.Create;
 end;
 
 constructor TpolyLineTool.Create;
 begin
   ToolName := 'Карандаш';
-  SetLength(Options, 2);
+  SetLength(Options, 3);
   Options[0] := TpenColor.Create;
-  Options[1] := Twidth.Create;
+  Options[1] := TpenKind.Create;
+  Options[2] := Twidth.Create;
 end;
 
 procedure RegisterTool(ATool: TTools);
