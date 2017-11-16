@@ -26,7 +26,7 @@ type
   Trectangle = class(Tfigure)
     PenColor, FillColor: TColor;
     Width: integer;
-    Bstyle: boolean;
+    Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -34,7 +34,7 @@ type
   Tellipce = class(Tfigure)
     PenColor, FillColor: TColor;
     Width: integer;
-    Bstyle: boolean;
+    Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -54,7 +54,7 @@ type
   TroundRect = class(Tfigure)
     PenColor, FillColor: TColor;
     Width, Round: integer;
-    Bstyle: boolean;
+    Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -73,10 +73,7 @@ begin
   Acanvas.Pen.Color := PenColor;
   Acanvas.Brush.Color := FillColor;
   Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+  Acanvas.Brush.Style := Bstyle;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
     WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y);
 end;
@@ -86,10 +83,7 @@ begin
   Acanvas.Pen.Color := PenColor;
   Acanvas.Brush.Color := FillColor;
   Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+  Acanvas.Brush.Style := Bstyle;
   Acanvas.RoundRect(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
     WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y, Round, Round);
 end;
@@ -108,10 +102,7 @@ begin
   Acanvas.Pen.Color := PenColor;
   Acanvas.Brush.Color := FillColor;
   Acanvas.Pen.Width := Width;
-  if Bstyle then
-    Acanvas.Brush.Style := bsSolid
-  else
-    Acanvas.Brush.Style := bsClear;
+  Acanvas.Brush.Style := Bstyle;
   Acanvas.Ellipse(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
     WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y);
 end;

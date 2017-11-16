@@ -10,7 +10,7 @@ uses
 
 type
 
-  RbrushStyles = record
+  RfillStyles = record
     NameStyle: string;
     AStyle: TBrushStyle;
   end;
@@ -41,9 +41,9 @@ type
     constructor Create; override;
   end;
 
-  TbrushStyle = class(Toptions)
+  TfillStyle = class(Toptions)
     iFill: integer;
-    Styles: array[0..7] of RbrushStyles;
+    Styles: array[0..7] of RfillStyles;
     procedure AClick(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
@@ -58,7 +58,7 @@ type
 var
   gPenColor, gFillColor: TColor;
   gWidth, gRound: integer;
-  gBstyle: boolean;
+  gBstyle: TBrushStyle;
 
 implementation
 
@@ -75,9 +75,9 @@ begin
     gRound := 1;
 end;
 
-procedure TbrushStyle.AClick(ASender: TObject);
+procedure TfillStyle.AClick(ASender: TObject);
 begin
-  gBstyle := (ASender as TCheckBox).Checked;
+  gBstyle:=Styles[(ASender as TComboBox).ItemIndex].AStyle;
 end;
 
 procedure TfillColor.AClick(ASender: TObject);
@@ -93,15 +93,15 @@ begin
     gWidth := 1;
 end;
 
-constructor TbrushStyle.Create;
+constructor TfillStyle.Create;
 begin
   OptionName := 'Стиль заливки';
   Styles[0].AStyle:=bsSolid; Styles[0].NameStyle:='Полная';
   Styles[1].AStyle:=bsClear; Styles[1].NameStyle:='Пустая';
   Styles[2].AStyle:=bsHorizontal; Styles[2].NameStyle:='Горизонтали';
   Styles[3].AStyle:=bsVertical; Styles[3].NameStyle:='Вертикали';
-  Styles[4].AStyle:=bsFDiagonal; Styles[4].NameStyle:='Диагонали /';
-  Styles[5].AStyle:=bsBDiagonal; Styles[5].NameStyle:='Диагонали \';
+  Styles[4].AStyle:=bsFDiagonal; Styles[4].NameStyle:='Диагонали \';
+  Styles[5].AStyle:=bsBDiagonal; Styles[5].NameStyle:='Диагонали /';
   Styles[6].AStyle:=bsCross; Styles[6].NameStyle:='Клетка';
   Styles[7].AStyle:=bsDiagCross; Styles[7].NameStyle:='Ромбы';
 end;
@@ -134,14 +134,17 @@ begin
   Result.Caption := OptionName;
 end;
 
-function TbrushStyle.ToControls(AParent: Tpanel): TControl;
+function TfillStyle.ToControls(AParent: Tpanel): TControl;
+var i:integer;
 begin
   Result := TComboBox.Create(AParent);
   with Result as TComboBox do
   begin
     Parent := AParent;
-    /////////////////////////////////////////////
-    OnClick := @AClick;
+    for i:=0 to 7 do
+    Items.Add(Styles[i].NameStyle);
+    ItemIndex:=0;
+    OnChange := @AClick;
   end;
 end;
 

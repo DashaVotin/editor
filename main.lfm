@@ -23,6 +23,7 @@ object Fgraphics: TFgraphics
     Top = 0
     Width = 296
     Anchors = [akTop, akLeft, akRight, akBottom]
+    ParentFont = False
     OnClick = PBdrawClick
     OnMouseDown = PBdrawMouseDown
     OnMouseMove = PBdrawMouseMove

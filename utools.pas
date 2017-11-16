@@ -221,7 +221,7 @@ begin
   Options[0] := TpenColor.Create;
   Options[1] := Twidth.Create;
   Options[2] := TfillColor.Create;
-  Options[3] := TbrushStyle.Create;
+  Options[3] := TfillStyle.Create;
 end;
 
 constructor TroundRectTool.Create;
@@ -231,7 +231,7 @@ begin
   Options[0] := TpenColor.Create;
   Options[1] := Twidth.Create;
   Options[2] := TfillColor.Create;
-  Options[3] := TbrushStyle.Create;
+  Options[3] := TfillStyle.Create;
   Options[4] := Tround.Create;
 end;
 
@@ -242,7 +242,7 @@ begin
   Options[0] := TpenColor.Create;
   Options[1] := Twidth.Create;
   Options[2] := TfillColor.Create;
-  Options[3] := TbrushStyle.Create;
+  Options[3] := TfillStyle.Create;
 end;
 
 constructor TpolyLineTool.Create;
