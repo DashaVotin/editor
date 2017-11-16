@@ -57,13 +57,38 @@ type
     constructor Create;
   end;
 
+procedure ChangeMaxMinPoint;
 
 var
   ToolNum: integer;
   ToolList: array of Ttools;
   Figures: array of Tfigure;
+  MaxPoint, MinPoint: TdoublePoint;
 
 implementation
+
+procedure ChangeMaxMinPoint;
+var
+  i, j: integer;
+begin
+  MaxPoint.X := Figures[1].Dpoints[0].X;
+  MaxPoint.Y := Figures[1].Dpoints[0].Y;
+  MinPoint.X := Figures[1].Dpoints[0].X;
+  MinPoint.Y := Figures[1].Dpoints[0].Y;
+  for i := 1 to High(Figures) do
+    with Figures[i] do
+      for j := 1 to High(Dpoints) do
+      begin
+        if MaxPoint.X < Dpoints[j].X then
+          MaxPoint.X := Dpoints[j].X;
+        if MaxPoint.Y < Dpoints[j].Y then
+          MaxPoint.Y := Dpoints[j].Y;
+        if MinPoint.X > Dpoints[j].X then
+          MinPoint.X := Dpoints[j].X;
+        if MinPoint.Y > Dpoints[j].Y then
+          MinPoint.Y := Dpoints[j].Y;
+      end;
+end;
 
 procedure ThandTool.MouseMove(x, y: integer);
 begin
@@ -89,29 +114,8 @@ begin
 end;
 
 procedure Ttools.MouseUp(x, y: integer; Left: boolean);
-var
-  max, min: TdoublePoint;
-  i: integer;
 begin
-  with Figures[High(Figures)] do
-  begin
-    max.X := Dpoints[0].X;
-    max.Y := Dpoints[0].Y;
-    min.X := Dpoints[0].X;
-    min.y := Dpoints[0].Y;
-    for i := 1 to High(Dpoints) do
-    begin
-      if Dpoints[i].X > max.X then
-        max.X := Dpoints[i].X;
-      if Dpoints[i].y > max.y then
-        max.y := Dpoints[i].y;
-      if Dpoints[i].X < min.X then
-        min.X := Dpoints[i].X;
-      if Dpoints[i].y < min.y then
-        min.y := Dpoints[i].y;
-    end;
-  end;
-  MaxMin(max.X, min.x, max.y, min.y);
+  ChangeMaxMinPoint;
 end;
 
 procedure ThandTool.MouseUp(x, y: integer; Left: boolean);

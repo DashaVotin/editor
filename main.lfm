@@ -2,10 +2,10 @@ object Fgraphics: TFgraphics
   Left = 7
   Height = 626
   Top = 157
-  Width = 434
+  Width = 633
   Caption = 'Графический редактор'
   ClientHeight = 601
-  ClientWidth = 434
+  ClientWidth = 633
   Menu = Mmenu
   OnCreate = FormCreate
   OnResize = FormResize
@@ -21,7 +21,7 @@ object Fgraphics: TFgraphics
     Left = 120
     Height = 583
     Top = 0
-    Width = 296
+    Width = 495
     Anchors = [akTop, akLeft, akRight, akBottom]
     ParentFont = False
     OnMouseDown = PBdrawMouseDown
@@ -76,7 +76,7 @@ object Fgraphics: TFgraphics
     Left = 120
     Height = 18
     Top = 583
-    Width = 296
+    Width = 495
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 1
@@ -89,7 +89,7 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 416
+    Left = 615
     Height = 601
     Top = 0
     Width = 18

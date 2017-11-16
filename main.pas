@@ -149,6 +149,11 @@ end;
 
 procedure TFgraphics.MhomeClick(Sender: TObject);
 begin
+  ChangeMaxMinPoint;
+  MinPoint.x -= 10;
+  MinPoint.y -= 10;
+  MaxPoint.x += 10;
+  MaxPoint.y += 10;
   RectScale(MinPoint, MaxPoint);
   PBdraw.Invalidate;
 end;
@@ -160,6 +165,7 @@ begin
     SetLength(RedoFigures, Length(RedoFigures) + 1);
     RedoFigures[High(RedoFigures)] := Figures[High(Figures)];
     SetLength(Figures, High(Figures));
+    ChangeMaxMinPoint;
   end;
   PBdraw.Invalidate;
 end;
@@ -171,6 +177,7 @@ begin
     SetLength(Figures, Length(Figures) + 1);
     Figures[High(Figures)] := RedoFigures[High(RedoFigures)];
     SetLength(RedoFigures, High(RedoFigures));
+    ChangeMaxMinPoint;
   end;
   PBdraw.Invalidate;
 end;

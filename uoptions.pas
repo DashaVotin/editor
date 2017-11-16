@@ -180,7 +180,7 @@ end;
 
 constructor Tround.Create;
 begin
-  gRound := 10;
+  gRound := 30;
   OptionName := 'Сила закругления';
 end;
 
