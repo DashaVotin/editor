@@ -27,8 +27,8 @@ type
     PNfigures: TPanel;
     PNtool: TPanel;
     PBdraw: TPaintBox;
-    ScrollBar1: TScrollBar;
-    ScrollBar2: TScrollBar;
+    ScrolHoriz: TScrollBar;
+    ScrolVert: TScrollBar;
     SEscale: TSpinEdit;
     PanelOptions: TPanel;
     procedure FormCreate(Sender: TObject);
@@ -38,7 +38,6 @@ type
     procedure MexitClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
-    procedure PBdrawClick(Sender: TObject);
     procedure PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
@@ -168,11 +167,6 @@ begin
   PBdraw.Invalidate;
 end;
 
-procedure TFgraphics.PBdrawClick(Sender: TObject);
-begin
-
-end;
-
 procedure TFgraphics.MeraseallClick(Sender: TObject);
 begin
   SetLength(Figures, 1);
@@ -222,7 +216,7 @@ var
 begin
   with PBdraw.Canvas do
   begin
-    SEscale.Text := FloatToStr(Scale * 100);
+    SEscale.Text := FloatToStr(round(Scale * 100));
   end;
   for i := 0 to High(Figures) do
     Figures[i].Draw(PBdraw.Canvas);

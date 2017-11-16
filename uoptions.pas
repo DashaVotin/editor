@@ -108,10 +108,21 @@ end;
 
 procedure Twidth.AClick(ASender: TObject);
 begin
-  if StrToInt((ASender as TSpinEdit).Text) > 0 then
-    gWidth := StrToInt((ASender as TSpinEdit).Text)
-  else
-    gWidth := 1;
+  try
+    if StrToInt((ASender as TSpinEdit).Text) > 0 then
+      gWidth := StrToInt((ASender as TSpinEdit).Text)
+    else
+      begin
+      gWidth := 1;
+      (ASender as TSpinEdit).Text := '1';
+      end;
+  except
+    on  EConvertError do
+    begin
+      gWidth := 1;
+      (ASender as TSpinEdit).Text := '1';
+    end;
+  end;
 end;
 
 constructor TfillStyle.Create;
@@ -192,6 +203,7 @@ begin
       Items.Add(Styles[i].NameStyle);
     ItemIndex := gBstyle.AIndex;
     OnChange := @AClick;
+    ReadOnly := True;
   end;
 end;
 
@@ -207,6 +219,7 @@ begin
       Items.Add(Kinds[i].NameKind);
     ItemIndex := gPstyle.AIndex;
     OnChange := @AClick;
+    ReadOnly := True;
   end;
 end;
 

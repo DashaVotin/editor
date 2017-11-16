@@ -15,16 +15,15 @@ object Fgraphics: TFgraphics
     AnchorSideLeft.Control = PNtool
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = ScrollBar1
+    AnchorSideRight.Control = ScrolHoriz
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ScrollBar1
+    AnchorSideBottom.Control = ScrolHoriz
     Left = 120
     Height = 583
     Top = 0
     Width = 296
     Anchors = [akTop, akLeft, akRight, akBottom]
     ParentFont = False
-    OnClick = PBdrawClick
     OnMouseDown = PBdrawMouseDown
     OnMouseMove = PBdrawMouseMove
     OnMouseUp = PBdrawMouseUp
@@ -68,10 +67,10 @@ object Fgraphics: TFgraphics
       end
     end
   end
-  object ScrollBar1: TScrollBar
+  object ScrolHoriz: TScrollBar
     AnchorSideLeft.Control = PNtool
     AnchorSideLeft.Side = asrBottom
-    AnchorSideRight.Control = ScrollBar2
+    AnchorSideRight.Control = ScrolVert
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 120
@@ -82,7 +81,7 @@ object Fgraphics: TFgraphics
     PageSize = 0
     TabOrder = 1
   end
-  object ScrollBar2: TScrollBar
+  object ScrolVert: TScrollBar
     AnchorSideLeft.Control = PBdraw
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
