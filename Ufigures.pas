@@ -48,6 +48,11 @@ type
     constructor Create;
   end;
 
+  Tselect = class(Tfigure)
+    procedure Draw(Acanvas: Tcanvas); override;
+    constructor Create;
+  end;
+
   TroundRect = class(Tfigure)
     FillColor: TColor;
     Round: integer;
@@ -93,6 +98,16 @@ procedure Tloupe.Draw(Acanvas: TCanvas);
 begin
   Acanvas.Pen.Color := clBlack;
   Acanvas.Pen.Style := psSolid;
+  Acanvas.Brush.Style := bsClear;
+  Acanvas.Pen.Width := 1;
+  Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
+    WorldToScreen(Dpoints[1]).X, WorldToScreen(Dpoints[1]).Y);
+end;
+
+procedure Tselect.Draw(Acanvas: TCanvas);
+begin
+  Acanvas.Pen.Color := clBlack;
+  Acanvas.Pen.Style := psDashDot;
   Acanvas.Brush.Style := bsClear;
   Acanvas.Pen.Width := 1;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
@@ -156,6 +171,12 @@ constructor Tloupe.Create;
 begin
   SetLength(Dpoints, 2);
   FigureName := 'Tloupe';
+end;
+
+constructor Tselect.Create;
+begin
+  SetLength(Dpoints, 2);
+  FigureName := 'Tselect';
 end;
 
 end.

@@ -51,8 +51,14 @@ type
   end;
 
   ThandTool = class(Ttools)
+    StartOffset, StartPoint: TdoublePoint;
     procedure MouseDown(x, y: integer); override;
     procedure MouseMove(x, y: integer); override;
+    constructor Create;
+  end;
+
+  TselectTool = class(Ttools)
+    procedure MouseDown(x, y: integer); override;
     procedure MouseUp(x, y: integer; Left: boolean); override;
     constructor Create;
   end;
@@ -92,12 +98,8 @@ end;
 
 procedure ThandTool.MouseMove(x, y: integer);
 begin
-  with Figures[High(Figures)] do
-  begin
-    Dpoints[1] := ScreenToWorld(Point(x, y));
-    Offset.X := Offset.X + Dpoints[0].X - Dpoints[1].X;
-    Offset.Y := Offset.Y + Dpoints[0].Y - Dpoints[1].Y;
-  end;
+  Offset.X := StartOffset.X + StartPoint.X - x;
+  Offset.Y := StartOffset.Y + StartPoint.Y - y;
 end;
 
 procedure Ttools.MouseMove(x, y: integer);
@@ -118,8 +120,19 @@ begin
   ChangeMaxMinPoint;
 end;
 
-procedure ThandTool.MouseUp(x, y: integer; Left: boolean);
+procedure TselectTool.MouseUp(x, y: integer; Left: boolean);
 begin
+  with Figures[High(Figures)] do
+  begin
+    if Dpoints[0].X = Dpoints[1].X then
+    begin
+      /////
+    end
+    else
+    begin
+      ////
+    end;
+  end;
   SetLength(Figures, High(Figures));
 end;
 
@@ -129,22 +142,23 @@ var
 begin
   xy.Y := y;
   xy.X := x;
-  if figures[High(Figures)].Dpoints[0].X = Figures[High(Figures)].Dpoints[1].X then
+  with Figures[High(Figures)] do
   begin
-    if left then
-      Scale := Scale * 2
+    if Dpoints[0].X = Dpoints[1].X then
+    begin
+      if left then
+        Scale := Scale * 2
+      else
+        Scale := Scale / 2;
+      ToPointScale(xy);
+    end
     else
-      Scale := Scale / 2;
-    ToPointScale(xy);
-  end
-  else
-  begin
-    if figures[High(Figures)].Dpoints[0].X < Figures[High(Figures)].Dpoints[1].X then
-      RectScale(Figures[High(Figures)].Dpoints[0], Figures[High(Figures)].Dpoints[1])
-    else
-      RectScale(Figures[High(Figures)].Dpoints[1], Figures[High(Figures)].Dpoints[0]);
-    SetLength(Figures, High(Figures));
+      if Dpoints[0].X < Dpoints[1].X then
+        RectScale(Dpoints[0], Dpoints[1])
+      else
+        RectScale(Dpoints[1], Dpoints[0]);
   end;
+  SetLength(Figures, High(Figures));
 end;
 
 procedure TlineTool.MouseDown(x, y: integer);
@@ -231,16 +245,30 @@ begin
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
 end;
 
-procedure ThandTool.MouseDown(x, y: integer);
+procedure TselectTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
-  Figures[High(Figures)] := TpolyLine.Create;
+  Figures[High(Figures)] := Tselect.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
+  Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
+end;
+
+procedure ThandTool.MouseDown(x, y: integer);
+begin
+  StartPoint.X := x;
+  StartPoint.Y := y;
+  StartOffset.X := Offset.X;
+  StartOffset.Y := Offset.Y;
 end;
 
 constructor TloupeTool.Create;
 begin
   ToolName := 'Лупа';
+end;
+
+constructor TselectTool.Create;
+begin
+  ToolName := 'Выделить';
 end;
 
 constructor ThandTool.Create;
@@ -314,5 +342,6 @@ initialization
   RegisterTool(TellipceTool.Create);
   RegisterTool(TloupeTool.Create);
   RegisterTool(ThandTool.Create);
+  RegisterTool(TselectTool.Create);
 
 end.

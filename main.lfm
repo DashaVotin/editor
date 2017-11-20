@@ -47,11 +47,11 @@ object Fgraphics: TFgraphics
     end
     object PNzoom: TPanel
       Left = 1
-      Height = 130
-      Top = 470
+      Height = 170
+      Top = 430
       Width = 118
       Align = alBottom
-      ClientHeight = 130
+      ClientHeight = 170
       ClientWidth = 118
       TabOrder = 1
       object SEscale: TSpinEdit

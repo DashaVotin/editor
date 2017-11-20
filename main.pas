@@ -51,6 +51,7 @@ type
     function ButtonCreate(Fstart, Ffinish: TPoint; Num: integer;
       Aparent: TPanel): TButton;
     procedure CreatePanel;
+    procedure ChangeScrols;
   private
 
   public
@@ -78,6 +79,15 @@ begin
     ToolList[ToolNum].Options[i].ToControls(PanelOptions).Align := alTop;
     ToolList[ToolNum].Options[i].ToLabels(PanelOptions).Align := alTop;
   end;
+end;
+
+procedure TFgraphics.ChangeScrols;
+begin
+  ScrolHoriz.Min:=round(MinPoint.X);
+  ScrolHoriz.Max:=round(MaxPoint.X);
+  ScrolVert.Min:=round(MinPoint.Y);
+  ScrolVert.Max:=round(MaxPoint.Y);
+   //////////////////
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -125,7 +135,7 @@ begin
   ButtonCreate(Point(10, 10), Point(100, 30), 0, PNfigures).Click;
   for i := 1 to 4 do
     ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures).Align := alNone;
-  for i := 5 to 6 do
+  for i := 5 to 7 do
     ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom).Align := alNone;
   Offset.X := 0;
   Offset.Y := 0;
