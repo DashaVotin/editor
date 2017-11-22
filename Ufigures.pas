@@ -17,10 +17,12 @@ type
     Dpoints: array of TdoublePoint;
     FigureName: string;
     procedure Draw(Acanvas: Tcanvas); virtual; abstract;
+    function OnePointSelect(x, y: integer): boolean; virtual;
   end;
 
   Tline = class(Tfigure)
     procedure Draw(Acanvas: Tcanvas); override;
+    function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
 
@@ -28,6 +30,7 @@ type
     FillColor: TColor;
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
+    function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
 
@@ -35,11 +38,13 @@ type
     FillColor: TColor;
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
+    function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
 
   Tpolyline = class(Tfigure)
     procedure Draw(Acanvas: Tcanvas); override;
+    function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
 
@@ -58,6 +63,7 @@ type
     Round: integer;
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
+    function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
 
@@ -107,7 +113,7 @@ end;
 procedure Tselect.Draw(Acanvas: TCanvas);
 begin
   Acanvas.Pen.Color := clBlack;
-  Acanvas.Pen.Style := psDashDot;
+  Acanvas.Pen.Style := psDash;
   Acanvas.Brush.Style := bsClear;
   Acanvas.Pen.Width := 1;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
@@ -135,6 +141,95 @@ begin
   Acanvas.Brush.Style := bsClear;
   for i := 1 to High(Dpoints) - 1 do
     ACanvas.Line(WorldToScreen(Dpoints[i]), WorldToScreen(Dpoints[i + 1]));
+end;
+
+function Tfigure.OnePointSelect(x, y: integer): boolean;
+begin
+  Result := False;
+end;
+
+function Tline.OnePointSelect(x, y: integer): boolean;
+var
+  x1, x2, y1, y2, w,i: double;
+begin
+  x1 := Dpoints[0].X;
+  x2 := Dpoints[1].X;
+  y1 := Dpoints[0].Y;
+  y2 := Dpoints[1].Y;
+  w:=5;
+  if (sqr(x-x1)+sqr(y-y1)<=sqr(w)) or
+  (sqr(x-x2)+sqr(y-y2)<=sqr(w)) or
+  (x*abs(y1-y2)+y*abs(x1-x2)=y2*x1-y1*x2)
+  then
+  Result:=true
+  else
+  Result := False;
+end;
+
+
+function Tpolyline.OnePointSelect(x, y: integer): boolean;
+var
+  x1, x2, y1, y2: double;
+  i: integer;
+begin
+  for i := 0 to High(Dpoints) - 1 do
+  begin
+    x1 := Dpoints[i].X;
+    x2 := Dpoints[i + 1].X;
+    y1 := Dpoints[i].Y;
+    y2 := Dpoints[i + 1].Y;
+   { if then
+     Result:=true
+    else     }
+     Result := False;
+  end;
+end;
+
+function Tellipce.OnePointSelect(x, y: integer): boolean;
+var
+  x1, x2, y1, y2: double;
+begin
+  x1 := Dpoints[0].X;
+  x2 := Dpoints[1].X;
+  y1 := Dpoints[0].Y;
+  y2 := Dpoints[1].Y;
+  if (sqr(x - (x1 + x2) / 2) / sqr((x2 - x1) / 2) + sqr(y - (y1 + y2) / 2) / sqr((y2 - y1) / 2) <= 1) then
+    Result := True
+  else
+    Result := False;
+end;
+
+function Trectangle.OnePointSelect(x, y: integer): boolean;
+var
+  x1, x2, y1, y2: double;
+begin
+  x1 := Dpoints[0].X;
+  x2 := Dpoints[1].X;
+  y1 := Dpoints[0].Y;
+  y2 := Dpoints[1].Y;        //а в обратную сторону?
+  if (x >= x1) and (x <= x2) and (y >= y1) and (y <= y2) then
+    Result := True
+  else
+    Result := False;
+end;
+
+function TroundRect.OnePointSelect(x, y: integer): boolean;
+var
+  x1, x2, y1, y2: double;
+begin
+  x1 := Dpoints[0].X;
+  x2 := Dpoints[1].X;
+  y1 := Dpoints[0].Y;
+  y2 := Dpoints[1].Y;
+  if ((x >= x1) and (x <= x2) and (y >= y1 + Round) and (y <= y2 - Round)) or
+    ((x >= x1 + Round) and (x <= x2 - Round) and (y >= y1) and (y <= y2)) or
+    (sqr(x - x1 - Round) + sqr(y - y1 - Round) <= sqr(Round)) or
+    (sqr(x - x2 + Round) + sqr(y - y1 - Round) <= sqr(Round)) or
+    (sqr(x - x1 - Round) + sqr(y - y2 + Round) <= sqr(Round)) or
+    (sqr(x - x2 + Round) + sqr(y - y2 + Round) <= sqr(Round)) then
+    Result := True
+  else
+    Result := False;
 end;
 
 constructor Tline.Create;

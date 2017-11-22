@@ -121,17 +121,21 @@ begin
 end;
 
 procedure TselectTool.MouseUp(x, y: integer; Left: boolean);
+var
+  i: integer;
 begin
-  with Figures[High(Figures)] do
+  if Figures[High(Figures)].Dpoints[0].X = Figures[High(Figures)].Dpoints[1].X then
   begin
-    if Dpoints[0].X = Dpoints[1].X then
-    begin
-      /////
-    end
-    else
-    begin
-      ////
-    end;
+    for i := High(Figures) downto 1 do
+      if Figures[i].OnePointSelect(x, y) then
+      begin
+        ShowMessage('+');///////////
+        break;
+      end;
+  end
+  else
+  begin
+    ////
   end;
   SetLength(Figures, High(Figures));
 end;
