@@ -1,10 +1,10 @@
 object Fgraphics: TFgraphics
-  Left = 7
-  Height = 626
-  Top = 157
+  Left = 6
+  Height = 723
+  Top = 152
   Width = 633
   Caption = 'Графический редактор'
-  ClientHeight = 601
+  ClientHeight = 698
   ClientWidth = 633
   Menu = Mmenu
   OnCreate = FormCreate
@@ -19,10 +19,11 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = ScrolHoriz
     Left = 120
-    Height = 583
+    Height = 680
     Top = 0
     Width = 495
     Anchors = [akTop, akLeft, akRight, akBottom]
+    ParentColor = False
     ParentFont = False
     OnMouseDown = PBdrawMouseDown
     OnMouseMove = PBdrawMouseMove
@@ -31,11 +32,11 @@ object Fgraphics: TFgraphics
   end
   object PNtool: TPanel
     Left = 0
-    Height = 601
+    Height = 698
     Top = 0
     Width = 120
     Align = alLeft
-    ClientHeight = 601
+    ClientHeight = 698
     ClientWidth = 120
     TabOrder = 0
     object PNfigures: TPanel
@@ -48,7 +49,7 @@ object Fgraphics: TFgraphics
     object PNzoom: TPanel
       Left = 1
       Height = 170
-      Top = 430
+      Top = 527
       Width = 118
       Align = alBottom
       ClientHeight = 170
@@ -75,7 +76,7 @@ object Fgraphics: TFgraphics
     AnchorSideBottom.Side = asrBottom
     Left = 120
     Height = 18
-    Top = 583
+    Top = 680
     Width = 495
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -90,7 +91,7 @@ object Fgraphics: TFgraphics
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 615
-    Height = 601
+    Height = 698
     Top = 0
     Width = 18
     Anchors = [akTop, akRight, akBottom]
@@ -113,10 +114,6 @@ object Fgraphics: TFgraphics
     end
     object Medit: TMenuItem
       Caption = 'Правка'
-      object Mhome: TMenuItem
-        Caption = 'Показать все'
-        OnClick = MhomeClick
-      end
       object Mannulment: TMenuItem
         Caption = 'Отменить'
         OnClick = MannulmentClick
@@ -124,6 +121,36 @@ object Fgraphics: TFgraphics
       object Mreturn: TMenuItem
         Caption = 'Вернуть'
         OnClick = MreturnClick
+      end
+      object MenuItem1: TMenuItem
+        Caption = '-'
+      end
+      object MselectAll: TMenuItem
+        Caption = 'Выделить все'
+        OnClick = MselectAllClick
+      end
+      object MselectUndone: TMenuItem
+        Caption = 'Сбросить выделение'
+        OnClick = MselectUndoneClick
+      end
+      object MselectDelete: TMenuItem
+        Caption = 'Удалить выделенное'
+      end
+      object MselectGround: TMenuItem
+        Caption = 'Изменить план'
+        object Mforeground: TMenuItem
+          Caption = 'На передний план'
+        end
+        object Mbackground: TMenuItem
+          Caption = 'На задний план'
+        end
+      end
+      object MenuItem7: TMenuItem
+        Caption = '-'
+      end
+      object Mhome: TMenuItem
+        Caption = 'Показать все'
+        OnClick = MhomeClick
       end
       object Meraseall: TMenuItem
         Caption = 'Стереть все'

@@ -5,7 +5,7 @@ unit Ufigures;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
+  Classes, Math, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
   ExtCtrls, UdPoints;
 
 type
@@ -112,8 +112,8 @@ end;
 
 procedure Tselect.Draw(Acanvas: TCanvas);
 begin
-  Acanvas.Pen.Color := clBlack;
-  Acanvas.Pen.Style := psDash;
+  Acanvas.Pen.Color := clRed;
+  Acanvas.Pen.Style := psDashDot;
   Acanvas.Brush.Style := bsClear;
   Acanvas.Pen.Width := 1;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
@@ -150,20 +150,18 @@ end;
 
 function Tline.OnePointSelect(x, y: integer): boolean;
 var
-  x1, x2, y1, y2, w,i: double;
+  x1, x2, y1, y2, w, i: double;
 begin
   x1 := Dpoints[0].X;
   x2 := Dpoints[1].X;
   y1 := Dpoints[0].Y;
   y2 := Dpoints[1].Y;
-  w:=5;
-  if (sqr(x-x1)+sqr(y-y1)<=sqr(w)) or
-  (sqr(x-x2)+sqr(y-y2)<=sqr(w)) or
-  (x*abs(y1-y2)+y*abs(x1-x2)=y2*x1-y1*x2)
-  then
-  Result:=true
+  w := 5;
+  if (sqr(x - x1) + sqr(y - y1) <= sqr(w)) or (sqr(x - x2) + sqr(y - y2) <= sqr(w)) or
+    (x * abs(y1 - y2) + y * abs(x1 - x2) = y2 * x1 - y1 * x2) then
+    Result := True
   else
-  Result := False;
+    Result := False;
 end;
 
 
@@ -181,7 +179,7 @@ begin
    { if then
      Result:=true
     else     }
-     Result := False;
+    Result := False;
   end;
 end;
 
@@ -193,7 +191,9 @@ begin
   x2 := Dpoints[1].X;
   y1 := Dpoints[0].Y;
   y2 := Dpoints[1].Y;
-  if (sqr(x - (x1 + x2) / 2) / sqr((x2 - x1) / 2) + sqr(y - (y1 + y2) / 2) / sqr((y2 - y1) / 2) <= 1) then
+  if (sqr(x - (x1 + x2) / 2) / sqr((x2 - x1) / 2) + sqr(y - (y1 + y2) / 2) /
+    sqr((y2 - y1) / 2) <= 1) then
+
     Result := True
   else
     Result := False;

@@ -64,11 +64,12 @@ type
   end;
 
 procedure ChangeMaxMinPoint;
+procedure CreateHighSelectFig;
 
 var
   ToolNum: integer;
   ToolList: array of Ttools;
-  Figures: array of Tfigure;
+  Figures, SelectFig: array of Tfigure;
   MaxPoint, MinPoint: TdoublePoint;
 
 implementation
@@ -77,10 +78,8 @@ procedure ChangeMaxMinPoint;
 var
   i, j: integer;
 begin
-  MaxPoint.X := Figures[1].Dpoints[0].X;
-  MaxPoint.Y := Figures[1].Dpoints[0].Y;
-  MinPoint.X := Figures[1].Dpoints[0].X;
-  MinPoint.Y := Figures[1].Dpoints[0].Y;
+  MaxPoint := Figures[1].Dpoints[0];
+  MinPoint := Figures[1].Dpoints[0];
   for i := 1 to High(Figures) do
     with Figures[i] do
       for j := 1 to High(Dpoints) do
@@ -94,6 +93,36 @@ begin
         if MinPoint.Y > Dpoints[j].Y then
           MinPoint.Y := Dpoints[j].Y;
       end;
+end;
+
+procedure CreateHighSelectFig;
+var
+  maxs, mins: TdoublePoint;
+  i, j: integer;
+begin
+  Maxs := SelectFig[0].Dpoints[0];
+  Mins := SelectFig[0].Dpoints[0];
+  for i := 0 to High(SelectFig) do
+    with SelectFig[i] do
+      for j := 1 to High(Dpoints) do
+      begin
+        if Maxs.X < Dpoints[j].X then
+          Maxs.X := Dpoints[j].X;
+        if Maxs.Y < Dpoints[j].Y then
+          Maxs.Y := Dpoints[j].Y;
+        if Mins.X > Dpoints[j].X then
+          Mins.X := Dpoints[j].X;
+        if Mins.Y > Dpoints[j].Y then
+          Mins.Y := Dpoints[j].Y;
+      end;
+  Maxs.X += 5;
+  Maxs.Y += 5;
+  Mins.X -= 5;
+  Mins.Y -= 5;
+  SetLength(SelectFig, Length(SelectFig) + 1);
+  SelectFig[High(SelectFig)] := Tselect.Create;
+  SelectFig[High(SelectFig)].Dpoints[0] := mins;
+  SelectFig[High(SelectFig)].Dpoints[1] := maxs;
 end;
 
 procedure ThandTool.MouseMove(x, y: integer);
@@ -126,10 +155,11 @@ var
 begin
   if Figures[High(Figures)].Dpoints[0].X = Figures[High(Figures)].Dpoints[1].X then
   begin
-    for i := High(Figures) downto 1 do
+    for i := High(Figures) downto 0 do
       if Figures[i].OnePointSelect(x, y) then
       begin
-        ShowMessage('+');///////////
+        SetLength(SelectFig, Length(SelectFig) + 1);
+        SelectFig[High(SelectFig)] := Figures[i];///////////
         break;
       end;
   end
@@ -138,7 +168,9 @@ begin
     ////
   end;
   SetLength(Figures, High(Figures));
+  CreateHighSelectFig;
 end;
+
 
 procedure TloupeTool.MouseUp(x, y: integer; Left: boolean);
 var
@@ -157,10 +189,10 @@ begin
       ToPointScale(xy);
     end
     else
-      if Dpoints[0].X < Dpoints[1].X then
-        RectScale(Dpoints[0], Dpoints[1])
-      else
-        RectScale(Dpoints[1], Dpoints[0]);
+    if Dpoints[0].X < Dpoints[1].X then
+      RectScale(Dpoints[0], Dpoints[1])
+    else
+      RectScale(Dpoints[1], Dpoints[0]);
   end;
   SetLength(Figures, High(Figures));
 end;

@@ -15,6 +15,14 @@ type
   TFgraphics = class(TForm)
     Mannulment: TMenuItem;
     Medit: TMenuItem;
+    MenuItem1: TMenuItem;
+    Mbackground: TMenuItem;
+    MselectAll: TMenuItem;
+    MselectUndone: TMenuItem;
+    MselectDelete: TMenuItem;
+    MselectGround: TMenuItem;
+    Mforeground: TMenuItem;
+    MenuItem7: TMenuItem;
     Mhome: TMenuItem;
     Meraseall: TMenuItem;
     Mreturn: TMenuItem;
@@ -40,6 +48,8 @@ type
     procedure MhomeClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
+    procedure MselectAllClick(Sender: TObject);
+    procedure MselectUndoneClick(Sender: TObject);
     procedure PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure PBdrawMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
@@ -83,11 +93,11 @@ end;
 
 procedure TFgraphics.ChangeScrols;
 begin
-  ScrolHoriz.Min:=round(MinPoint.X);
-  ScrolHoriz.Max:=round(MaxPoint.X);
-  ScrolVert.Min:=round(MinPoint.Y);
-  ScrolVert.Max:=round(MaxPoint.Y);
-   //////////////////
+  ScrolHoriz.Min := round(MinPoint.X);
+  ScrolHoriz.Max := round(MaxPoint.X);
+  ScrolVert.Min := round(MinPoint.Y);
+  ScrolVert.Max := round(MaxPoint.Y);
+  //////////////////
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -125,6 +135,7 @@ var
 begin
   Drawing := False;
   SetLength(Figures, 1);
+  SetLength(SelectFig, 0);            ////////////
   Brush.Color := clWhite;
   Figures[0] := Trectangle.Create;
   Figures[0].Dpoints[0] := ScreenToWorld(Point(0, 0));
@@ -192,6 +203,24 @@ begin
   PBdraw.Invalidate;
 end;
 
+procedure TFgraphics.MselectAllClick(Sender: TObject);
+var
+  i: integer;
+begin
+  SetLength(SelectFig, 0);
+  SetLength(SelectFig, High(Figures));
+  for i := 1 to High(Figures) do
+    SelectFig[i - 1] := Figures[i];
+  CreateHighSelectFig;
+  PBdraw.Invalidate;
+end;
+
+procedure TFgraphics.MselectUndoneClick(Sender: TObject);
+begin
+  SetLength(SelectFig, 0);
+  PBdraw.Invalidate;
+end;
+
 procedure TFgraphics.MeraseallClick(Sender: TObject);
 begin
   SetLength(Figures, 1);
@@ -245,6 +274,8 @@ begin
   end;
   for i := 0 to High(Figures) do
     Figures[i].Draw(PBdraw.Canvas);
+  if Length(SelectFig) > 0 then
+    SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);
 end;
 
 procedure TFgraphics.SEscaleChange(Sender: TObject);
