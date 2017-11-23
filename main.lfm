@@ -135,14 +135,17 @@ object Fgraphics: TFgraphics
       end
       object MselectDelete: TMenuItem
         Caption = 'Удалить выделенное'
+        OnClick = MselectDeleteClick
       end
       object MselectGround: TMenuItem
         Caption = 'Изменить план'
         object Mforeground: TMenuItem
           Caption = 'На передний план'
+          OnClick = MforegroundClick
         end
         object Mbackground: TMenuItem
           Caption = 'На задний план'
+          OnClick = MbackgroundClick
         end
       end
       object MenuItem7: TMenuItem
