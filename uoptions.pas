@@ -83,10 +83,22 @@ end;
 
 procedure Tround.AClick(ASender: TObject);
 begin
-  if StrToInt((ASender as TSpinEdit).Text) > 0 then
-    gRound := StrToInt((ASender as TSpinEdit).Text)
-  else
-    gRound := 1;
+  try
+    if StrToInt((ASender as TSpinEdit).Text) > 0 then
+      gRound := StrToInt((ASender as TSpinEdit).Text)
+    else
+    begin
+      gRound := 1;
+      (ASender as TSpinEdit).Text := '1';
+    end;
+  except
+    on  EConvertError do
+    begin
+      gRound := 1;
+      (ASender as TSpinEdit).Text := '1';
+    end;
+  end;
+
 end;
 
 procedure TfillStyle.AClick(ASender: TObject);
