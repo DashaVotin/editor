@@ -100,22 +100,22 @@ var
   maxs, mins: TdoublePoint;
   i, j: integer;
 begin
-  Maxs.X := SelectFig[0].Dpoints[0].X+SelectFig[0].Width/2;
-  Maxs.Y := SelectFig[0].Dpoints[0].Y+SelectFig[0].Width/2;
-  Mins.X := SelectFig[0].Dpoints[0].X-SelectFig[0].Width/2;
-  Mins.Y := SelectFig[0].Dpoints[0].Y-SelectFig[0].Width/2;
+  Maxs.X := SelectFig[0].Dpoints[0].X + SelectFig[0].Width / 2;
+  Maxs.Y := SelectFig[0].Dpoints[0].Y + SelectFig[0].Width / 2;
+  Mins.X := SelectFig[0].Dpoints[0].X - SelectFig[0].Width / 2;
+  Mins.Y := SelectFig[0].Dpoints[0].Y - SelectFig[0].Width / 2;
   for i := 0 to High(SelectFig) do
     with SelectFig[i] do
       for j := 0 to High(Dpoints) do
       begin
-        if Maxs.X < Dpoints[j].X+Width/2 then
-          Maxs.X := Dpoints[j].X+Width/2;
-        if Maxs.Y < Dpoints[j].Y+Width/2 then
-          Maxs.Y := Dpoints[j].Y+Width/2;
-        if Mins.X > Dpoints[j].X-Width/2 then
-          Mins.X := Dpoints[j].X-Width/2;
-        if Mins.Y > Dpoints[j].Y-Width/2 then
-          Mins.Y := Dpoints[j].Y-Width/2;
+        if Maxs.X < Dpoints[j].X + Width / 2 then
+          Maxs.X := Dpoints[j].X + Width / 2;
+        if Maxs.Y < Dpoints[j].Y + Width / 2 then
+          Maxs.Y := Dpoints[j].Y + Width / 2;
+        if Mins.X > Dpoints[j].X - Width / 2 then
+          Mins.X := Dpoints[j].X - Width / 2;
+        if Mins.Y > Dpoints[j].Y - Width / 2 then
+          Mins.Y := Dpoints[j].Y - Width / 2;
       end;
   Maxs.X += 5;
   Maxs.Y += 5;
@@ -153,8 +153,8 @@ end;
 
 procedure TselectTool.MouseUp(x, y: integer; Left: boolean);
 var
-  i: integer;
-  highFmin, highFmax: TdoublePoint;
+  i, j: integer;
+  highFmin, highFmax, highDmin, highDmax: TdoublePoint;
 begin
   highFmin.X := Min(Figures[High(Figures)].Dpoints[0].X,
     Figures[High(Figures)].Dpoints[1].X);
@@ -177,14 +177,30 @@ begin
   else
   begin
     for i := 1 to High(Figures) - 1 do
-      if (highFmin.X <= Figures[i].Dpoints[0].X) and
-        (highFmin.Y <= Figures[i].Dpoints[0].Y) and
-        (highFmax.X >= Figures[i].Dpoints[1].X) and (highFmax.Y >=
-        Figures[i].Dpoints[1].Y) then
+    begin
+      highDmax := Figures[i].Dpoints[0];
+      highDmin := Figures[i].Dpoints[0];
+      for j := 0 to High(Figures[i].Dpoints) do
+        with Figures[i] do
+        begin
+          if highDmax.X < Dpoints[j].X then
+            highDmax.X := Dpoints[j].X;
+          if highDmax.Y < Dpoints[j].Y then
+            highDmax.Y := Dpoints[j].Y;
+          if highDmin.X > Dpoints[j].X then
+            highDmin.X := Dpoints[j].X;
+          if highDmin.Y > Dpoints[j].Y then
+            highDmin.Y := Dpoints[j].Y;
+        end;
+      if (highFmin.X <= highDmin.X) and
+        (highFmin.Y <= highDmin.Y) and
+        (highFmax.X >= highDmax.X) and
+        (highFmax.Y >= highDmax.Y) then
       begin
         SetLength(SelectFig, Length(SelectFig) + 1);
         SelectFig[High(SelectFig)] := Figures[i];
       end;
+    end;
   end;
   SetLength(Figures, High(Figures));
   if Length(SelectFig) > 0 then
@@ -307,7 +323,7 @@ begin
   Figures[High(Figures)] := Tselect.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
-  (Figures[High(Figures)] as Tselect).i:=1;
+  (Figures[High(Figures)] as Tselect).i := 1;
 end;
 
 procedure ThandTool.MouseDown(x, y: integer);

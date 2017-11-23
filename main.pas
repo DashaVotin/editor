@@ -185,22 +185,25 @@ end;
 
 procedure TFgraphics.MforegroundClick(Sender: TObject);
 var
-  i, j: integer;
+  i, j, l: integer;
 begin
-  j := 1;
-  for i := 0 to High(SelectFig) - 1 do
-    if Figures[i + 1] = SelectFig[i] then
-      Figures[i + 1].Free
-    else
+  if Length(SelectFig) > 0 then
+    if SelectFig[High(SelectFig)].ClassType = Tselect then
     begin
-      Figures[j] := Figures[i + 1];
-      j += 1;
+      for i := 0 to High(SelectFig) - 1 do
+        for j := 1 to High(Figures) do
+          if Figures[j] = SelectFig[i] then
+          begin
+            for l := j to High(Figures) - 1 do
+              Figures[l] := Figures[l + 1];
+            SetLength(Figures, High(Figures));
+            break;
+          end;
+      SetLength(Figures, Length(Figures) + High(SelectFig));
+      for i := Length(Figures) - High(SelectFig) to High(Figures) do
+        Figures[i] := SelectFig[i - Length(Figures) + High(SelectFig)];
+      PBdraw.Invalidate;
     end;
-  SetLength(Figures, j + 1);
-  SetLength(Figures, Length(Figures) + High(SelectFig));
-  for i := Length(Figures) - High(SelectFig) to High(Figures) do
-    Figures[i] := SelectFig[i - Length(Figures) + High(SelectFig)];
-  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MhomeClick(Sender: TObject);
@@ -223,29 +226,35 @@ begin
     SetLength(Figures, High(Figures));
     ChangeMaxMinPoint;
   end;
+  if Length(SelectFig) > 0 then
+    if SelectFig[High(SelectFig)].ClassType = Tselect then
+      SetLength(SelectFig, 0);
   PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MbackgroundClick(Sender: TObject);
 var
-  i, j: integer;
+  i, j, l: integer;
 begin
-  j := 1;
-  for i := 0 to High(SelectFig) - 1 do
-    if Figures[i + 1] = SelectFig[i] then
-      Figures[i + 1].Free
-    else
+  if Length(SelectFig) > 0 then
+    if SelectFig[High(SelectFig)].ClassType = Tselect then
     begin
-      Figures[j] := Figures[i + 1];
-      j += 1;
+      for i := 0 to High(SelectFig) - 1 do
+        for j := 1 to High(Figures) do
+          if Figures[j] = SelectFig[i] then
+          begin
+            for l := j to High(Figures) - 1 do
+              Figures[l] := Figures[l + 1];
+            SetLength(Figures, High(Figures));
+            break;
+          end;
+      SetLength(Figures, Length(Figures) + High(SelectFig));
+      for i := High(Figures) - High(SelectFig) downto 1 do
+        Figures[i + High(SelectFig)] := Figures[i];
+      for i := 1 to High(SelectFig) do
+        Figures[i] := SelectFig[i - 1];
+      PBdraw.Invalidate;
     end;
-  SetLength(Figures, j + 1);
-  SetLength(Figures, Length(Figures) + High(SelectFig));
-  for i := High(Figures) - High(SelectFig) downto 1 do
-    Figures[i + High(SelectFig)] := Figures[i];
-  for i := 1 to High(SelectFig) do
-    Figures[i] := SelectFig[i - 1];
-  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MreturnClick(Sender: TObject);
@@ -274,20 +283,23 @@ end;
 
 procedure TFgraphics.MselectDeleteClick(Sender: TObject);
 var
-  i, j: integer;
+  i, j, l: integer;
 begin
-  j := 1;
-  for i := 0 to High(SelectFig) - 1 do
-    if Figures[i + 1] = SelectFig[i] then
-      Figures[i + 1].Free
-    else
+  if Length(SelectFig) > 0 then
+    if SelectFig[High(SelectFig)].ClassType = Tselect then
     begin
-      Figures[j] := Figures[i + 1];
-      j += 1;
+      for i := 0 to High(SelectFig) - 1 do
+        for j := 1 to High(Figures) do
+          if Figures[j] = SelectFig[i] then
+          begin
+            for l := j to High(Figures) - 1 do
+              Figures[l] := Figures[l + 1];
+            SetLength(Figures, High(Figures));
+            break;
+          end;
+      SetLength(SelectFig, 0);
+      PBdraw.Invalidate;
     end;
-  SetLength(Figures, j + 1);
-  SetLength(SelectFig, 0);
-  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.MselectUndoneClick(Sender: TObject);
@@ -299,6 +311,7 @@ end;
 procedure TFgraphics.MeraseallClick(Sender: TObject);
 begin
   SetLength(Figures, 1);
+  SetLength(SelectFig, 0);
   PBdraw.Invalidate;
 end;
 
