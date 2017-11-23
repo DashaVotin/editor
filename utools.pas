@@ -100,20 +100,22 @@ var
   maxs, mins: TdoublePoint;
   i, j: integer;
 begin
-  Maxs := SelectFig[0].Dpoints[0];
-  Mins := SelectFig[0].Dpoints[0];
+  Maxs.X := SelectFig[0].Dpoints[0].X+SelectFig[0].Width/2;
+  Maxs.Y := SelectFig[0].Dpoints[0].Y+SelectFig[0].Width/2;
+  Mins.X := SelectFig[0].Dpoints[0].X-SelectFig[0].Width/2;
+  Mins.Y := SelectFig[0].Dpoints[0].Y-SelectFig[0].Width/2;
   for i := 0 to High(SelectFig) do
     with SelectFig[i] do
       for j := 0 to High(Dpoints) do
       begin
-        if Maxs.X < Dpoints[j].X then
-          Maxs.X := Dpoints[j].X;
-        if Maxs.Y < Dpoints[j].Y then
-          Maxs.Y := Dpoints[j].Y;
-        if Mins.X > Dpoints[j].X then
-          Mins.X := Dpoints[j].X;
-        if Mins.Y > Dpoints[j].Y then
-          Mins.Y := Dpoints[j].Y;
+        if Maxs.X < Dpoints[j].X+Width/2 then
+          Maxs.X := Dpoints[j].X+Width/2;
+        if Maxs.Y < Dpoints[j].Y+Width/2 then
+          Maxs.Y := Dpoints[j].Y+Width/2;
+        if Mins.X > Dpoints[j].X-Width/2 then
+          Mins.X := Dpoints[j].X-Width/2;
+        if Mins.Y > Dpoints[j].Y-Width/2 then
+          Mins.Y := Dpoints[j].Y-Width/2;
       end;
   Maxs.X += 5;
   Maxs.Y += 5;
