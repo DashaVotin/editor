@@ -168,7 +168,7 @@ begin
       if Figures[i].OnePointSelect(x, y) then
       begin
         SetLength(SelectFig, Length(SelectFig) + 1);
-        SelectFig[High(SelectFig)] := Figures[i];///////////
+        SelectFig[High(SelectFig)] := Figures[i];
         break;
       end;
   end
@@ -176,8 +176,9 @@ begin
   begin
     for i := 1 to High(Figures) - 1 do
       if (highFmin.X <= Figures[i].Dpoints[0].X) and
-        (highFmin.Y <= Figures[i].Dpoints[0].Y) and (highFmax.X >= Figures[i].Dpoints[1].X) and
-        (highFmax.Y >= Figures[i].Dpoints[1].Y) then
+        (highFmin.Y <= Figures[i].Dpoints[0].Y) and
+        (highFmax.X >= Figures[i].Dpoints[1].X) and (highFmax.Y >=
+        Figures[i].Dpoints[1].Y) then
       begin
         SetLength(SelectFig, Length(SelectFig) + 1);
         SelectFig[High(SelectFig)] := Figures[i];

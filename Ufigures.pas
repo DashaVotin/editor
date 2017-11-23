@@ -150,35 +150,77 @@ end;
 
 function Tline.OnePointSelect(x, y: integer): boolean;
 var
-  x1, x2, y1, y2, w, i: double;
+  x1, x2, y1, y2, w, c: double;
+  i: integer;
 begin
   x1 := Min(Dpoints[0].X, Dpoints[1].X);
   x2 := Max(Dpoints[0].X, Dpoints[1].X);
   y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
   y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
-  w := 5;
-  if (sqr(x - x1) + sqr(y - y1) <= sqr(w)) or (sqr(x - x2) + sqr(y - y2) <= sqr(w)) then
-    Result := True
+  w := 5 + Width;
+  if (x1 = x2) then
+  begin
+    if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then
+      Result := True;
+  end
   else
-    Result := False;
+    for i := 1 to 2 do
+      if (sqr(x - x1) + sqr(y - y1) <= sqr(w / 2 + 2)) or
+        (sqr(x - x2) + sqr(y - y2) <= sqr(w / 2 + 2)) or
+        ((y >= (y2 - y1) / (x2 - x1) * x + y2 - (y2 - y1) / (x2 - x1) * x2 - w) and
+        (y <= (y2 - y1) / (x2 - x1) * x + y2 - (y2 - y1) / (x2 - x1) * x2 + w) and
+        (x >= x1) and (x <= x2)) then
+      begin
+        Result := True;
+        break;
+      end
+      else
+      begin
+        c := y2;
+        y2 := y1;
+        y1 := c;
+        Result := False;
+      end;
 end;
-
 
 function Tpolyline.OnePointSelect(x, y: integer): boolean;
 var
-  x1, x2, y1, y2: double;
-  i: integer;
+  x1, x2, y1, y2, w, c: double;
+  i, j: integer;
 begin
-  for i := 0 to High(Dpoints) - 1 do
+  for i := 0 to High(Dpoints) do
   begin
     x1 := Min(Dpoints[i].X, Dpoints[i + 1].X);
     x2 := Max(Dpoints[i].X, Dpoints[i + 1].X);
     y1 := Min(Dpoints[i].Y, Dpoints[i + 1].Y);
     y2 := Max(Dpoints[i].Y, Dpoints[i + 1].Y);
-   { if then
-     Result:=true
-    else     }
-    Result := False;
+    w := 5 + Width;
+    if (x1 = x2) then
+    begin
+      if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then
+      begin
+        Result := True;
+        exit;
+      end;
+    end
+    else
+      for j := 1 to 2 do
+        if (sqr(x - x1) + sqr(y - y1) <= sqr(w / 2 + 2)) or
+          (sqr(x - x2) + sqr(y - y2) <= sqr(w / 2 + 2)) or
+          ((y >= (y2 - y1) / (x2 - x1) * x + y2 - (y2 - y1) / (x2 - x1) * x2 - w) and
+          (y <= (y2 - y1) / (x2 - x1) * x + y2 - (y2 - y1) / (x2 - x1) * x2 + w) and
+          (x >= x1) and (x <= x2)) then
+        begin
+          Result := True;
+          exit;
+        end
+        else
+        begin
+          c := y2;
+          y2 := y1;
+          y1 := c;
+          Result := False;
+        end;
   end;
 end;
 
@@ -186,10 +228,10 @@ function Tellipce.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Min(Dpoints[0].X, Dpoints[1].X);
-  x2 := Max(Dpoints[0].X, Dpoints[1].X);
-  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
-  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
+  x1 := Min(Dpoints[0].X, Dpoints[1].X) - Width;
+  x2 := Max(Dpoints[0].X, Dpoints[1].X) + Width;
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y) - Width;
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y) + Width;
   if (sqr(x - (x1 + x2) / 2) / sqr((x2 - x1) / 2) + sqr(y - (y1 + y2) / 2) /
     sqr((y2 - y1) / 2) <= 1) then
     Result := True
@@ -201,10 +243,10 @@ function Trectangle.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Min(Dpoints[0].X, Dpoints[1].X);
-  x2 := Max(Dpoints[0].X, Dpoints[1].X);
-  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
-  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
+  x1 := Min(Dpoints[0].X, Dpoints[1].X) - Width;
+  x2 := Max(Dpoints[0].X, Dpoints[1].X) + Width;
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y) - Width;
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y) + Width;
   if (x >= x1) and (x <= x2) and (y >= y1) and (y <= y2) then
     Result := True
   else
@@ -215,10 +257,10 @@ function TroundRect.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Min(Dpoints[0].X, Dpoints[1].X);
-  x2 := Max(Dpoints[0].X, Dpoints[1].X);
-  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
-  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
+  x1 := Min(Dpoints[0].X, Dpoints[1].X) - Width;
+  x2 := Max(Dpoints[0].X, Dpoints[1].X) + Width;
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y) - Width;
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y) + Width;
   if ((x >= x1) and (x <= x2) and (y >= y1 + Round) and (y <= y2 - Round)) or
     ((x >= x1 + Round) and (x <= x2 - Round) and (y >= y1) and (y <= y2)) or
     (sqr(x - x1 - Round) + sqr(y - y1 - Round) <= sqr(Round)) or
