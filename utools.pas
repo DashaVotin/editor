@@ -307,6 +307,7 @@ begin
   Figures[High(Figures)] := Tselect.Create;
   Figures[High(Figures)].Dpoints[0] := ScreenToWorld(Point(x, y));
   Figures[High(Figures)].Dpoints[1] := ScreenToWorld(Point(x, y));
+  (Figures[High(Figures)] as Tselect).i:=1;
 end;
 
 procedure ThandTool.MouseDown(x, y: integer);

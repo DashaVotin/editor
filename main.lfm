@@ -168,4 +168,10 @@ object Fgraphics: TFgraphics
       end
     end
   end
+  object TpenStyleSelect: TTimer
+    Interval = 100
+    OnTimer = TpenStyleSelectTimer
+    left = 274
+    top = 106
+  end
 end

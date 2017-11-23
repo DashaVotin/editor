@@ -40,6 +40,7 @@ type
     ScrolVert: TScrollBar;
     SEscale: TSpinEdit;
     PanelOptions: TPanel;
+    TpenStyleSelect: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure MannulmentClick(Sender: TObject);
@@ -65,6 +66,7 @@ type
       Aparent: TPanel): TButton;
     procedure CreatePanel;
     procedure ChangeScrols;
+    procedure TpenStyleSelectTimer(Sender: TObject);
   private
 
   public
@@ -101,6 +103,17 @@ begin
   ScrolVert.Min := round(MinPoint.Y);
   ScrolVert.Max := round(MaxPoint.Y);
   //////////////////
+end;
+
+procedure TFgraphics.TpenStyleSelectTimer(Sender: TObject);
+begin
+  if Length(SelectFig) > 0 then
+    if SelectFig[High(SelectFig)].ClassType = Tselect then
+      if (SelectFig[High(SelectFig)] as Tselect).i < 4 then
+        (SelectFig[High(SelectFig)] as Tselect).i += 1
+      else
+        (SelectFig[High(SelectFig)] as Tselect).i := 1;
+  PBdraw.Invalidate;
 end;
 
 procedure TFgraphics.CreatePanel;
@@ -340,7 +353,7 @@ begin
   for i := 0 to High(Figures) do
     Figures[i].Draw(PBdraw.Canvas);
   if Length(SelectFig) > 0 then
-    SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);
+    SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);   //анимация
 end;
 
 procedure TFgraphics.SEscaleChange(Sender: TObject);

@@ -54,6 +54,7 @@ type
   end;
 
   Tselect = class(Tfigure)
+    i:integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -113,7 +114,12 @@ end;
 procedure Tselect.Draw(Acanvas: TCanvas);
 begin
   Acanvas.Pen.Color := clRed;
+  if i=1 then
+  Acanvas.Pen.Style := psDash;
+  if i=2 then
   Acanvas.Pen.Style := psDashDot;
+  if i=3 then
+  Acanvas.Pen.Style := psDashDotDot;
   Acanvas.Brush.Style := bsClear;
   Acanvas.Pen.Width := 1;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
