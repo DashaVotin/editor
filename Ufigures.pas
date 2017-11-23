@@ -152,13 +152,12 @@ function Tline.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2, w, i: double;
 begin
-  x1 := Dpoints[0].X;
-  x2 := Dpoints[1].X;
-  y1 := Dpoints[0].Y;
-  y2 := Dpoints[1].Y;
+  x1 := Min(Dpoints[0].X, Dpoints[1].X);
+  x2 := Max(Dpoints[0].X, Dpoints[1].X);
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
   w := 5;
-  if (sqr(x - x1) + sqr(y - y1) <= sqr(w)) or (sqr(x - x2) + sqr(y - y2) <= sqr(w)) or
-    (x * abs(y1 - y2) + y * abs(x1 - x2) = y2 * x1 - y1 * x2) then
+  if (sqr(x - x1) + sqr(y - y1) <= sqr(w)) or (sqr(x - x2) + sqr(y - y2) <= sqr(w)) then
     Result := True
   else
     Result := False;
@@ -172,10 +171,10 @@ var
 begin
   for i := 0 to High(Dpoints) - 1 do
   begin
-    x1 := Dpoints[i].X;
-    x2 := Dpoints[i + 1].X;
-    y1 := Dpoints[i].Y;
-    y2 := Dpoints[i + 1].Y;
+    x1 := Min(Dpoints[i].X, Dpoints[i + 1].X);
+    x2 := Max(Dpoints[i].X, Dpoints[i + 1].X);
+    y1 := Min(Dpoints[i].Y, Dpoints[i + 1].Y);
+    y2 := Max(Dpoints[i].Y, Dpoints[i + 1].Y);
    { if then
      Result:=true
     else     }
@@ -187,13 +186,12 @@ function Tellipce.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Dpoints[0].X;
-  x2 := Dpoints[1].X;
-  y1 := Dpoints[0].Y;
-  y2 := Dpoints[1].Y;
+  x1 := Min(Dpoints[0].X, Dpoints[1].X);
+  x2 := Max(Dpoints[0].X, Dpoints[1].X);
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
   if (sqr(x - (x1 + x2) / 2) / sqr((x2 - x1) / 2) + sqr(y - (y1 + y2) / 2) /
     sqr((y2 - y1) / 2) <= 1) then
-
     Result := True
   else
     Result := False;
@@ -203,10 +201,10 @@ function Trectangle.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Dpoints[0].X;
-  x2 := Dpoints[1].X;
-  y1 := Dpoints[0].Y;
-  y2 := Dpoints[1].Y;        //а в обратную сторону?
+  x1 := Min(Dpoints[0].X, Dpoints[1].X);
+  x2 := Max(Dpoints[0].X, Dpoints[1].X);
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
   if (x >= x1) and (x <= x2) and (y >= y1) and (y <= y2) then
     Result := True
   else
@@ -217,10 +215,10 @@ function TroundRect.OnePointSelect(x, y: integer): boolean;
 var
   x1, x2, y1, y2: double;
 begin
-  x1 := Dpoints[0].X;
-  x2 := Dpoints[1].X;
-  y1 := Dpoints[0].Y;
-  y2 := Dpoints[1].Y;
+  x1 := Min(Dpoints[0].X, Dpoints[1].X);
+  x2 := Max(Dpoints[0].X, Dpoints[1].X);
+  y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
+  y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
   if ((x >= x1) and (x <= x2) and (y >= y1 + Round) and (y <= y2 - Round)) or
     ((x >= x1 + Round) and (x <= x2 - Round) and (y >= y1) and (y <= y2)) or
     (sqr(x - x1 - Round) + sqr(y - y1 - Round) <= sqr(Round)) or

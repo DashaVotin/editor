@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
-  ExtCtrls, Ufigures, UdPoints, Uoptions;
+  ExtCtrls, Math, Ufigures, UdPoints, Uoptions;
 
 type
 
@@ -82,7 +82,7 @@ begin
   MinPoint := Figures[1].Dpoints[0];
   for i := 1 to High(Figures) do
     with Figures[i] do
-      for j := 1 to High(Dpoints) do
+      for j := 0 to High(Dpoints) do
       begin
         if MaxPoint.X < Dpoints[j].X then
           MaxPoint.X := Dpoints[j].X;
@@ -104,7 +104,7 @@ begin
   Mins := SelectFig[0].Dpoints[0];
   for i := 0 to High(SelectFig) do
     with SelectFig[i] do
-      for j := 1 to High(Dpoints) do
+      for j := 0 to High(Dpoints) do
       begin
         if Maxs.X < Dpoints[j].X then
           Maxs.X := Dpoints[j].X;
@@ -152,10 +152,19 @@ end;
 procedure TselectTool.MouseUp(x, y: integer; Left: boolean);
 var
   i: integer;
+  highFmin, highFmax: TdoublePoint;
 begin
-  if Figures[High(Figures)].Dpoints[0].X = Figures[High(Figures)].Dpoints[1].X then
+  highFmin.X := Min(Figures[High(Figures)].Dpoints[0].X,
+    Figures[High(Figures)].Dpoints[1].X);
+  highFmax.X := Max(Figures[High(Figures)].Dpoints[0].X,
+    Figures[High(Figures)].Dpoints[1].X);
+  highFmin.Y := Min(Figures[High(Figures)].Dpoints[0].Y,
+    Figures[High(Figures)].Dpoints[1].Y);
+  highFmax.Y := Max(Figures[High(Figures)].Dpoints[0].Y,
+    Figures[High(Figures)].Dpoints[1].Y);
+  if (highFmin.X = highFmax.X) then
   begin
-    for i := High(Figures) downto 0 do
+    for i := High(Figures) - 1 downto 1 do
       if Figures[i].OnePointSelect(x, y) then
       begin
         SetLength(SelectFig, Length(SelectFig) + 1);
@@ -165,10 +174,18 @@ begin
   end
   else
   begin
-    ////
+    for i := 1 to High(Figures) - 1 do
+      if (highFmin.X <= Figures[i].Dpoints[0].X) and
+        (highFmin.Y <= Figures[i].Dpoints[0].Y) and (highFmax.X >= Figures[i].Dpoints[1].X) and
+        (highFmax.Y >= Figures[i].Dpoints[1].Y) then
+      begin
+        SetLength(SelectFig, Length(SelectFig) + 1);
+        SelectFig[High(SelectFig)] := Figures[i];
+      end;
   end;
   SetLength(Figures, High(Figures));
-  CreateHighSelectFig;
+  if Length(SelectFig) > 0 then
+    CreateHighSelectFig;
 end;
 
 
