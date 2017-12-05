@@ -54,7 +54,7 @@ type
   end;
 
   Tselect = class(Tfigure)
-    i:integer;
+    i: integer;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -67,6 +67,9 @@ type
     function OnePointSelect(x, y: integer): boolean; override;
     constructor Create;
   end;
+
+const
+  INDENT = 5;
 
 implementation
 
@@ -114,12 +117,12 @@ end;
 procedure Tselect.Draw(Acanvas: TCanvas);
 begin
   Acanvas.Pen.Color := clRed;
-  if i=1 then
-  Acanvas.Pen.Style := psDash;
-  if i=2 then
-  Acanvas.Pen.Style := psDashDot;
-  if i=3 then
-  Acanvas.Pen.Style := psDashDotDot;
+  if i = 1 then
+    Acanvas.Pen.Style := psDash;
+  if i = 2 then
+    Acanvas.Pen.Style := psDashDot;
+  if i = 3 then
+    Acanvas.Pen.Style := psDashDotDot;
   Acanvas.Brush.Style := bsClear;
   Acanvas.Pen.Width := 1;
   Acanvas.Rectangle(WorldToScreen(Dpoints[0]).X, WorldToScreen(Dpoints[0]).Y,
@@ -163,7 +166,7 @@ begin
   x2 := Max(Dpoints[0].X, Dpoints[1].X);
   y1 := Min(Dpoints[0].Y, Dpoints[1].Y);
   y2 := Max(Dpoints[0].Y, Dpoints[1].Y);
-  w := 5 + Width;
+  w := INDENT + Width;
   if (x1 = x2) then
   begin
     if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then
@@ -196,11 +199,11 @@ var
 begin
   for i := 0 to High(Dpoints) do
   begin
-    x1 := Min(Dpoints[i].X, Dpoints[i + 1].X);
-    x2 := Max(Dpoints[i].X, Dpoints[i + 1].X);
-    y1 := Min(Dpoints[i].Y, Dpoints[i + 1].Y);
-    y2 := Max(Dpoints[i].Y, Dpoints[i + 1].Y);
-    w := 5 + Width;
+    x1 := Min(Dpoints[i].X, Dpoints[i - 1].X);
+    x2 := Max(Dpoints[i].X, Dpoints[i - 1].X);
+    y1 := Min(Dpoints[i].Y, Dpoints[i - 1].Y);
+    y2 := Max(Dpoints[i].Y, Dpoints[i - 1].Y);
+    w := INDENT + Width;
     if (x1 = x2) then
     begin
       if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then

@@ -1,11 +1,12 @@
 object Fgraphics: TFgraphics
-  Left = 6
-  Height = 723
+  Left = 17
+  Height = 686
   Top = 152
   Width = 642
   Caption = 'Графический редактор'
-  ClientHeight = 698
+  ClientHeight = 661
   ClientWidth = 642
+  KeyPreview = True
   Menu = Mmenu
   OnCreate = FormCreate
   OnResize = FormResize
@@ -19,7 +20,7 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = ScrolHoriz
     Left = 120
-    Height = 680
+    Height = 643
     Top = 0
     Width = 504
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -32,11 +33,11 @@ object Fgraphics: TFgraphics
   end
   object PNtool: TPanel
     Left = 0
-    Height = 698
+    Height = 661
     Top = 0
     Width = 120
     Align = alLeft
-    ClientHeight = 698
+    ClientHeight = 661
     ClientWidth = 120
     TabOrder = 0
     object PNfigures: TPanel
@@ -49,7 +50,7 @@ object Fgraphics: TFgraphics
     object PNzoom: TPanel
       Left = 1
       Height = 170
-      Top = 527
+      Top = 490
       Width = 118
       Align = alBottom
       ClientHeight = 170
@@ -76,7 +77,7 @@ object Fgraphics: TFgraphics
     AnchorSideBottom.Side = asrBottom
     Left = 120
     Height = 18
-    Top = 680
+    Top = 643
     Width = 504
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -91,7 +92,7 @@ object Fgraphics: TFgraphics
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 624
-    Height = 698
+    Height = 661
     Top = 0
     Width = 18
     Anchors = [akTop, akRight, akBottom]
@@ -104,9 +105,6 @@ object Fgraphics: TFgraphics
     top = 96
     object Mfile: TMenuItem
       Caption = 'Файл'
-      object Mtrait: TMenuItem
-        Caption = '-'
-      end
       object Mexit: TMenuItem
         Caption = 'Выход'
         OnClick = MexitClick
@@ -116,10 +114,12 @@ object Fgraphics: TFgraphics
       Caption = 'Правка'
       object Mannulment: TMenuItem
         Caption = 'Отменить'
+        ShortCut = 16474
         OnClick = MannulmentClick
       end
       object Mreturn: TMenuItem
         Caption = 'Вернуть'
+        ShortCut = 49242
         OnClick = MreturnClick
       end
       object MenuItem1: TMenuItem
@@ -127,24 +127,29 @@ object Fgraphics: TFgraphics
       end
       object MselectAll: TMenuItem
         Caption = 'Выделить все'
+        ShortCut = 16449
         OnClick = MselectAllClick
       end
       object MselectUndone: TMenuItem
         Caption = 'Сбросить выделение'
+        ShortCut = 16472
         OnClick = MselectUndoneClick
       end
       object MselectDelete: TMenuItem
         Caption = 'Удалить выделенное'
+        ShortCut = 8238
         OnClick = MselectDeleteClick
       end
       object MselectGround: TMenuItem
         Caption = 'Изменить план'
         object Mforeground: TMenuItem
           Caption = 'На передний план'
+          ShortCut = 16471
           OnClick = MforegroundClick
         end
         object Mbackground: TMenuItem
           Caption = 'На задний план'
+          ShortCut = 16465
           OnClick = MbackgroundClick
         end
       end
@@ -153,10 +158,12 @@ object Fgraphics: TFgraphics
       end
       object Mhome: TMenuItem
         Caption = 'Показать все'
+        ShortCut = 16467
         OnClick = MhomeClick
       end
       object Meraseall: TMenuItem
         Caption = 'Стереть все'
+        ShortCut = 46
         OnClick = MeraseallClick
       end
     end

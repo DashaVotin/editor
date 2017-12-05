@@ -26,7 +26,6 @@ type
     Mhome: TMenuItem;
     Meraseall: TMenuItem;
     Mreturn: TMenuItem;
-    Mtrait: TMenuItem;
     Minformation: TMenuItem;
     Mreference: TMenuItem;
     Mexit: TMenuItem;
@@ -89,11 +88,13 @@ begin
   ToolNum := (ASender as TButton).Tag;
   PanelOptions.Free;
   CreatePanel;
+  PanelOptions.Visible := False;
   for i := High(ToolList[ToolNum].Options) downto Low(ToolList[ToolNum].Options) do
   begin
     ToolList[ToolNum].Options[i].ToControls(PanelOptions).Align := alTop;
     ToolList[ToolNum].Options[i].ToLabels(PanelOptions).Align := alTop;
   end;
+  PanelOptions.Visible := True;
 end;
 
 procedure TFgraphics.ChangeScrols;
@@ -106,13 +107,46 @@ begin
 end;
 
 procedure TFgraphics.TpenStyleSelectTimer(Sender: TObject);
+var
+  i, j: integer;
 begin
   if Length(SelectFig) > 0 then
+  begin
     if SelectFig[High(SelectFig)].ClassType = Tselect then
       if (SelectFig[High(SelectFig)] as Tselect).i < 4 then
         (SelectFig[High(SelectFig)] as Tselect).i += 1
       else
         (SelectFig[High(SelectFig)] as Tselect).i := 1;
+    for i := 0 to High(SelectFig) - 1 do
+      for j := 1 to High(Figures) do
+        if Figures[j] = SelectFig[i] then
+        begin
+          Figures[j].PenColor := gPenColor;
+          Figures[j].Pstyle := gPstyle.Akind;
+          Figures[j].Width := gWidth;
+          if PanelOptions.ComponentCount > 6 then
+          begin
+            if Figures[j].ClassType = Tellipce then
+            begin
+              (Figures[j] as Tellipce).Bstyle := gBstyle.AStyle;
+              (Figures[j] as Tellipce).FillColor := gFillColor;
+            end
+            else
+            if Figures[j].ClassType = Trectangle then
+            begin
+              (Figures[j] as Trectangle).Bstyle := gBstyle.AStyle;
+              (Figures[j] as Trectangle).FillColor := gFillColor;
+            end
+            else
+            if Figures[j].ClassType = TroundRect then
+            begin
+              (Figures[j] as TroundRect).Bstyle := gBstyle.AStyle;
+              (Figures[j] as TroundRect).FillColor := gFillColor;
+              (Figures[j] as TroundRect).Round := gRound;
+            end;
+          end;
+        end;
+  end;
   PBdraw.Invalidate;
 end;
 
@@ -348,9 +382,9 @@ procedure TFgraphics.PBdrawMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   if button = mbLeft then
-    ToolList[ToolNum].MouseUp(x, y, True);
+    ToolList[ToolNum].MouseUp(x, y, True, PanelOptions);
   if Button = mbRight then
-    ToolList[ToolNum].MouseUp(x, y, False);
+    ToolList[ToolNum].MouseUp(x, y, False, PanelOptions);
   Drawing := False;
   PBdraw.Invalidate;
 end;
@@ -366,7 +400,7 @@ begin
   for i := 0 to High(Figures) do
     Figures[i].Draw(PBdraw.Canvas);
   if Length(SelectFig) > 0 then
-    SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);   //анимация
+    SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);
 end;
 
 procedure TFgraphics.SEscaleChange(Sender: TObject);

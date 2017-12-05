@@ -24,46 +24,46 @@ type
 
   Toptions = class
     OptionName: string;
-    procedure AClick(ASender: TObject); virtual; abstract;
+    procedure GetOption(ASender: TObject); virtual; abstract;
     function ToControls(AParent: TPanel): TControl; virtual; abstract;
     function ToLabels(Aparent: TPanel): TLabel;
     constructor Create; virtual; abstract;
   end;
 
   TpenColor = class(Toptions)
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   Twidth = class(Toptions)
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   TfillColor = class(Toptions)
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   TfillStyle = class(Toptions)
     Styles: array[0..7] of RfillStyles;
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   TpenKind = class(Toptions)
     Kinds: array[0..5] of RpenKind;
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
 
   Tround = class(Toptions)
-    procedure AClick(ASender: TObject); override;
+    procedure GetOption(ASender: TObject); override;
     function ToControls(AParent: TPanel): TControl; override;
     constructor Create; override;
   end;
@@ -76,49 +76,49 @@ var
 
 implementation
 
-procedure TpenColor.AClick(ASender: TObject);
+procedure TpenColor.GetOption(ASender: TObject);
 begin
   gPenColor := (ASender as TColorButton).ButtonColor;
 end;
 
-procedure Tround.AClick(ASender: TObject);
+procedure Tround.GetOption(ASender: TObject);
 begin
   try
     if StrToInt((ASender as TSpinEdit).Text) > 0 then
       gRound := StrToInt((ASender as TSpinEdit).Text)
     else
     begin
-      gRound := 1;
-      (ASender as TSpinEdit).Text := '1';
+      gRound := 30;
+      (ASender as TSpinEdit).Text := '30';
     end;
   except
     on  EConvertError do
     begin
-      gRound := 1;
-      (ASender as TSpinEdit).Text := '1';
+      gRound := 30;
+      (ASender as TSpinEdit).Text := '30';
     end;
   end;
 
 end;
 
-procedure TfillStyle.AClick(ASender: TObject);
+procedure TfillStyle.GetOption(ASender: TObject);
 begin
   gBstyle.AStyle := Styles[(ASender as TComboBox).ItemIndex].AStyle;
   gBstyle.AIndex := (ASender as TComboBox).ItemIndex;
 end;
 
-procedure TpenKind.AClick(ASender: TObject);
+procedure TpenKind.GetOption(ASender: TObject);
 begin
   gPstyle.Akind := Kinds[(ASender as TComboBox).ItemIndex].Akind;
   gPstyle.AIndex := (ASender as TComboBox).ItemIndex;
 end;
 
-procedure TfillColor.AClick(ASender: TObject);
+procedure TfillColor.GetOption(ASender: TObject);
 begin
   gFillColor := (ASender as TColorButton).ButtonColor;
 end;
 
-procedure Twidth.AClick(ASender: TObject);
+procedure Twidth.GetOption(ASender: TObject);
 begin
   try
     if StrToInt((ASender as TSpinEdit).Text) > 0 then
@@ -177,7 +177,7 @@ end;
 
 constructor TpenColor.Create;
 begin
-  OptionName := ' Цвет карандаша';
+  OptionName := 'Цвет карандаша';
 end;
 
 constructor TfillColor.Create;
@@ -214,7 +214,7 @@ begin
     for i := 0 to 7 do
       Items.Add(Styles[i].NameStyle);
     ItemIndex := gBstyle.AIndex;
-    OnChange := @AClick;
+    OnChange := @GetOption;
     ReadOnly := True;
   end;
 end;
@@ -230,7 +230,7 @@ begin
     for i := 0 to 5 do
       Items.Add(Kinds[i].NameKind);
     ItemIndex := gPstyle.AIndex;
-    OnChange := @AClick;
+    OnChange := @GetOption;
     ReadOnly := True;
   end;
 end;
@@ -242,7 +242,7 @@ begin
   begin
     Parent := AParent;
     ButtonColor := gPenColor;
-    OnColorChanged := @AClick;
+    OnColorChanged := @GetOption;
   end;
 end;
 
@@ -253,7 +253,7 @@ begin
   begin
     Parent := AParent;
     ButtonColor := gFillColor;
-    onColorChanged := @AClick;
+    onColorChanged := @GetOption;
   end;
 end;
 
@@ -264,7 +264,7 @@ begin
   begin
     Parent := AParent;
     Text := IntToStr(gWidth);
-    OnChange := @AClick;
+    OnChange := @GetOption;
   end;
 end;
 
@@ -275,7 +275,7 @@ begin
   begin
     Parent := AParent;
     Text := IntToStr(gRound);
-    OnChange := @AClick;
+    OnChange := @GetOption;
   end;
 end;
 

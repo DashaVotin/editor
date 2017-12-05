@@ -14,7 +14,7 @@ type
     ToolName: string;
     Options: array of Toptions;
     procedure MouseDown(x, y: integer); virtual; abstract;
-    procedure MouseUp(x, y: integer; Left: boolean); virtual;
+    procedure MouseUp(x, y: integer; Left: boolean; Apanel: TPanel); virtual;
     procedure MouseMove(x, y: integer); virtual;
   end;
 
@@ -46,7 +46,7 @@ type
 
   TloupeTool = class(Ttools)
     procedure MouseDown(x, y: integer); override;
-    procedure MouseUp(x, y: integer; Left: boolean); override;
+    procedure MouseUp(x, y: integer; Left: boolean; Apanel: TPanel); override;
     constructor Create;
   end;
 
@@ -59,12 +59,13 @@ type
 
   TselectTool = class(Ttools)
     procedure MouseDown(x, y: integer); override;
-    procedure MouseUp(x, y: integer; Left: boolean); override;
+    procedure MouseUp(x, y: integer; Left: boolean; Apanel: TPanel); override;
     constructor Create;
   end;
 
 procedure ChangeMaxMinPoint;
 procedure CreateHighSelectFig;
+function MinToolNum(sel: array of Tfigure): integer;
 
 var
   ToolNum: integer;
@@ -73,6 +74,27 @@ var
   MaxPoint, MinPoint: TdoublePoint;
 
 implementation
+
+function MinToolNum(sel: array of Tfigure): integer;
+var i: integer;
+begin
+  for i := 0 to High(sel) do
+  begin
+    if (sel[i].FigureName = 'Tline') or (sel[i].FigureName = 'Tpolyline') then
+    begin
+      Result := 0;
+      exit;
+    end;
+    if (sel[i].FigureName = 'Trectangle') or (sel[i].FigureName = 'Tellipce') then
+    begin
+      Result := 2;
+      continue;
+    end
+    else
+      Result := 3;
+  end;
+end;
+
 
 procedure ChangeMaxMinPoint;
 var
@@ -117,10 +139,10 @@ begin
         if Mins.Y > Dpoints[j].Y - Width / 2 then
           Mins.Y := Dpoints[j].Y - Width / 2;
       end;
-  Maxs.X += 5;
-  Maxs.Y += 5;
-  Mins.X -= 5;
-  Mins.Y -= 5;
+  Maxs.X += INDENT;
+  Maxs.Y += INDENT;
+  Mins.X -= INDENT;
+  Mins.Y -= INDENT;
   SetLength(SelectFig, Length(SelectFig) + 1);
   SelectFig[High(SelectFig)] := Tselect.Create;
   SelectFig[High(SelectFig)].Dpoints[0] := mins;
@@ -146,14 +168,14 @@ begin
     ScreenToWorld(Point(x, y));
 end;
 
-procedure Ttools.MouseUp(x, y: integer; Left: boolean);
+procedure Ttools.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
 begin
   ChangeMaxMinPoint;
 end;
 
-procedure TselectTool.MouseUp(x, y: integer; Left: boolean);
+procedure TselectTool.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
 var
-  i, j: integer;
+  i, j, Num: integer;
   highFmin, highFmax, highDmin, highDmax: TdoublePoint;
 begin
   highFmin.X := Min(Figures[High(Figures)].Dpoints[0].X,
@@ -192,10 +214,8 @@ begin
           if highDmin.Y > Dpoints[j].Y then
             highDmin.Y := Dpoints[j].Y;
         end;
-      if (highFmin.X <= highDmin.X) and
-        (highFmin.Y <= highDmin.Y) and
-        (highFmax.X >= highDmax.X) and
-        (highFmax.Y >= highDmax.Y) then
+      if (highFmin.X <= highDmin.X) and (highFmin.Y <= highDmin.Y) and
+        (highFmax.X >= highDmax.X) and (highFmax.Y >= highDmax.Y) then
       begin
         SetLength(SelectFig, Length(SelectFig) + 1);
         SelectFig[High(SelectFig)] := Figures[i];
@@ -203,12 +223,23 @@ begin
     end;
   end;
   SetLength(Figures, High(Figures));
+  Apanel.DestroyComponents;
   if Length(SelectFig) > 0 then
+  begin
+    Apanel.Visible := False;
+    Num := MinToolNum(SelectFig);
+    for i := High(ToolList[Num].Options) downto Low(ToolList[Num].Options) do
+    begin
+      ToolList[Num].Options[i].ToControls(Apanel).Align := alTop;
+      ToolList[Num].Options[i].ToLabels(Apanel).Align := alTop;
+    end;
+    Apanel.Visible := True;
     CreateHighSelectFig;
+  end;
 end;
 
 
-procedure TloupeTool.MouseUp(x, y: integer; Left: boolean);
+procedure TloupeTool.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
 var
   xy: TdoublePoint;
 begin
