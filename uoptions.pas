@@ -68,73 +68,83 @@ type
     constructor Create; override;
   end;
 
+  TgOptions = record
+    gPenColor, gFillColor: TColor;
+    gWidth, gRound: integer;
+    gBstyle: RfillStyles;
+    gPstyle: RpenKind;
+  end;
+
 var
-  gPenColor, gFillColor: TColor;
-  gWidth, gRound: integer;
-  gBstyle: RfillStyles;
-  gPstyle: RpenKind;
+  gOptions: TgOptions;
+  changeOp: boolean;
 
 implementation
 
 procedure TpenColor.GetOption(ASender: TObject);
 begin
-  gPenColor := (ASender as TColorButton).ButtonColor;
+  gOptions.gPenColor := (ASender as TColorButton).ButtonColor;
+  changeOp:=true;
 end;
 
 procedure Tround.GetOption(ASender: TObject);
 begin
   try
     if StrToInt((ASender as TSpinEdit).Text) > 0 then
-      gRound := StrToInt((ASender as TSpinEdit).Text)
+      gOptions.gRound := StrToInt((ASender as TSpinEdit).Text)
     else
     begin
-      gRound := 30;
+      gOptions.gRound := 30;
       (ASender as TSpinEdit).Text := '30';
     end;
   except
     on  EConvertError do
     begin
-      gRound := 30;
+      gOptions.gRound := 30;
       (ASender as TSpinEdit).Text := '30';
     end;
   end;
-
+  changeOp:=true;
 end;
 
 procedure TfillStyle.GetOption(ASender: TObject);
 begin
-  gBstyle.AStyle := Styles[(ASender as TComboBox).ItemIndex].AStyle;
-  gBstyle.AIndex := (ASender as TComboBox).ItemIndex;
+  gOptions.gBstyle.AStyle := Styles[(ASender as TComboBox).ItemIndex].AStyle;
+  gOptions.gBstyle.AIndex := (ASender as TComboBox).ItemIndex;
+  changeOp:=true;
 end;
 
 procedure TpenKind.GetOption(ASender: TObject);
 begin
-  gPstyle.Akind := Kinds[(ASender as TComboBox).ItemIndex].Akind;
-  gPstyle.AIndex := (ASender as TComboBox).ItemIndex;
+  gOptions.gPstyle.Akind := Kinds[(ASender as TComboBox).ItemIndex].Akind;
+  gOptions.gPstyle.AIndex := (ASender as TComboBox).ItemIndex;
+  changeOp:=true;
 end;
 
 procedure TfillColor.GetOption(ASender: TObject);
 begin
-  gFillColor := (ASender as TColorButton).ButtonColor;
+  gOptions.gFillColor := (ASender as TColorButton).ButtonColor;
+  changeOp:=true;
 end;
 
 procedure Twidth.GetOption(ASender: TObject);
 begin
   try
     if StrToInt((ASender as TSpinEdit).Text) > 0 then
-      gWidth := StrToInt((ASender as TSpinEdit).Text)
+      gOptions.gWidth := StrToInt((ASender as TSpinEdit).Text)
     else
     begin
-      gWidth := 1;
+      gOptions.gWidth := 1;
       (ASender as TSpinEdit).Text := '1';
     end;
   except
     on  EConvertError do
     begin
-      gWidth := 1;
+      gOptions.gWidth := 1;
       (ASender as TSpinEdit).Text := '1';
     end;
   end;
+  changeOp:=true;
 end;
 
 constructor TfillStyle.Create;
@@ -192,7 +202,7 @@ end;
 
 constructor Tround.Create;
 begin
-  gRound := 30;
+  gOptions.gRound := 30;
   OptionName := 'Сила закругления';
 end;
 
@@ -213,7 +223,7 @@ begin
     Parent := AParent;
     for i := 0 to 7 do
       Items.Add(Styles[i].NameStyle);
-    ItemIndex := gBstyle.AIndex;
+    ItemIndex := gOptions.gBstyle.AIndex;
     OnChange := @GetOption;
     ReadOnly := True;
   end;
@@ -229,7 +239,7 @@ begin
     Parent := AParent;
     for i := 0 to 5 do
       Items.Add(Kinds[i].NameKind);
-    ItemIndex := gPstyle.AIndex;
+    ItemIndex := gOptions.gPstyle.AIndex;
     OnChange := @GetOption;
     ReadOnly := True;
   end;
@@ -241,7 +251,7 @@ begin
   with Result as TColorButton do
   begin
     Parent := AParent;
-    ButtonColor := gPenColor;
+    ButtonColor := gOptions.gPenColor;
     OnColorChanged := @GetOption;
   end;
 end;
@@ -252,7 +262,7 @@ begin
   with Result as TColorButton do
   begin
     Parent := AParent;
-    ButtonColor := gFillColor;
+    ButtonColor := gOptions.gFillColor;
     onColorChanged := @GetOption;
   end;
 end;
@@ -263,7 +273,7 @@ begin
   with Result as TSpinEdit do
   begin
     Parent := AParent;
-    Text := IntToStr(gWidth);
+    Text := IntToStr(gOptions.gWidth);
     OnChange := @GetOption;
   end;
 end;
@@ -274,7 +284,7 @@ begin
   with Result as TSpinEdit do
   begin
     Parent := AParent;
-    Text := IntToStr(gRound);
+    Text := IntToStr(gOptions.gRound);
     OnChange := @GetOption;
   end;
 end;

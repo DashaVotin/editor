@@ -63,9 +63,22 @@ type
     constructor Create;
   end;
 
+  TshiftTool = class(Ttools)
+    StartsPoint: TdoublePoint;
+    index: integer;
+    procedure MouseDown(x, y: integer); override;
+    procedure MouseMove(x, y: integer); override;
+    procedure MouseUp(x, y: integer; Left: boolean; Apanel: TPanel); override;
+    constructor Create;
+  end;
+
 procedure ChangeMaxMinPoint;
 procedure CreateHighSelectFig;
+procedure DrawAnchors(Acanvas: TCanvas);
+procedure SwapDouble(var a, b: double);
 function MinToolNum(sel: array of Tfigure): integer;
+function IntoAnchors(x, y: integer): integer;
+
 
 var
   ToolNum: integer;
@@ -75,8 +88,55 @@ var
 
 implementation
 
+procedure SwapDouble(var a, b: double);
+var
+  c: double;
+begin
+  c := a;
+  a := b;
+  b := c;
+end;
+
+procedure DrawAnchors(Acanvas: TCanvas);
+var
+  j: integer;
+begin
+  Acanvas.Pen.Color := clRed;
+  Acanvas.Pen.Style := psSolid;
+  Acanvas.Pen.Width := 1;
+  Acanvas.Brush.Style := bsClear;
+  for j := 0 to 2 do
+    Acanvas.Rectangle(WorldToScreen(
+      (SelectFig[High(SelectFig)] as Tselect).Anchors[j]).x - 5,
+      WorldToScreen((SelectFig[High(SelectFig)] as Tselect).Anchors[j]).Y - 5,
+      WorldToScreen((SelectFig[High(SelectFig)] as Tselect).Anchors[j]).X + 5,
+      WorldToScreen((SelectFig[High(SelectFig)] as Tselect).Anchors[j]).Y + 5);
+end;
+
+function IntoAnchors(x, y: integer): integer;
+var
+  j: integer;
+  x1, x2, y1, y2: double;
+begin
+  for j := 0 to 2 do
+  begin
+    x1 := (SelectFig[High(SelectFig)] as Tselect).Anchors[j].X - 5;
+    x2 := (SelectFig[High(SelectFig)] as Tselect).Anchors[j].X + 5;
+    y1 := (SelectFig[High(SelectFig)] as Tselect).Anchors[j].Y - 5;
+    y2 := (SelectFig[High(SelectFig)] as Tselect).Anchors[j].Y + 5;
+    if (x >= x1) and (x <= x2) and (y >= y1) and (y <= y2) then
+    begin
+      Result := j;
+      exit;
+    end
+    else
+      Result := -1;
+  end;
+end;
+
 function MinToolNum(sel: array of Tfigure): integer;
-var i: integer;
+var
+  i: integer;
 begin
   for i := 0 to High(sel) do
   begin
@@ -94,7 +154,6 @@ begin
       Result := 3;
   end;
 end;
-
 
 procedure ChangeMaxMinPoint;
 var
@@ -147,6 +206,10 @@ begin
   SelectFig[High(SelectFig)] := Tselect.Create;
   SelectFig[High(SelectFig)].Dpoints[0] := mins;
   SelectFig[High(SelectFig)].Dpoints[1] := maxs;
+  (SelectFig[High(SelectFig)] as Tselect).Anchors[0] := mins;
+  (SelectFig[High(SelectFig)] as Tselect).Anchors[1] := maxs;
+  (SelectFig[High(SelectFig)] as Tselect).Anchors[2].x := mins.X + (maxs.X - mins.X) / 2;
+  (SelectFig[High(SelectFig)] as Tselect).Anchors[2].y := mins.y + (maxs.y - mins.y) / 2;
 end;
 
 procedure ThandTool.MouseMove(x, y: integer);
@@ -166,6 +229,38 @@ begin
   SetLength(Figures[High(Figures)].Dpoints, Length(Figures[High(Figures)].Dpoints) + 1);
   Figures[High(Figures)].Dpoints[High(Figures[High(Figures)].Dpoints)] :=
     ScreenToWorld(Point(x, y));
+end;
+
+procedure TshiftTool.MouseMove(x, y: integer);
+var
+  i, j: integer;
+begin
+  if (Length(SelectFig) > 0) and (index >= 0) then
+  begin
+    for i := 0 to High(SelectFig) - 1 do
+      case index of
+        2:
+          for j := 0 to high(SelectFig[i].Dpoints) do
+          begin
+            SelectFig[i].Dpoints[j].X := SelectFig[i].Dpoints[j].X - StartsPoint.X + x;
+            SelectFig[i].Dpoints[j].Y := SelectFig[i].Dpoints[j].Y - StartsPoint.Y + y;
+          end;
+        1:
+        begin
+          SelectFig[i].Dpoints[1].X := SelectFig[i].Dpoints[1].X - StartsPoint.X + x;
+          SelectFig[i].Dpoints[1].Y := SelectFig[i].Dpoints[1].Y - StartsPoint.Y + y;
+        end;
+        0:
+        begin
+          SelectFig[i].Dpoints[0].X := SelectFig[i].Dpoints[0].X - StartsPoint.X + x;
+          SelectFig[i].Dpoints[0].Y := SelectFig[i].Dpoints[0].Y - StartsPoint.Y + y;
+        end;
+      end;
+    SetLength(SelectFig, High(SelectFig));
+    CreateHighSelectFig;
+    StartsPoint.X := x;
+    StartsPoint.Y := y;
+  end;
 end;
 
 procedure Ttools.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
@@ -238,7 +333,6 @@ begin
   end;
 end;
 
-
 procedure TloupeTool.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
 var
   xy: TdoublePoint;
@@ -264,6 +358,11 @@ begin
   SetLength(Figures, High(Figures));
 end;
 
+procedure TshiftTool.MouseUp(x, y: integer; Left: boolean; Apanel: TPanel);
+begin
+  index := -1;
+end;
+
 procedure TlineTool.MouseDown(x, y: integer);
 begin
   SetLength(Figures, Length(Figures) + 1);
@@ -272,9 +371,9 @@ begin
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
-    PenColor := gPenColor;
-    Width := gWidth;
-    Pstyle := gPstyle.Akind;
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
   end;
 end;
 
@@ -286,12 +385,12 @@ begin
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
-    PenColor := gPenColor;
-    Width := gWidth;
-    Pstyle := gPstyle.Akind;
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
   end;
-  (Figures[High(Figures)] as Trectangle).FillColor := gFillColor;
-  (Figures[High(Figures)] as Trectangle).Bstyle := gBstyle.AStyle;
+  (Figures[High(Figures)] as Trectangle).FillColor := gOptions.gFillColor;
+  (Figures[High(Figures)] as Trectangle).Bstyle := gOptions.gBstyle.AStyle;
 end;
 
 procedure TroundRectTool.MouseDown(x, y: integer);
@@ -302,13 +401,13 @@ begin
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
-    PenColor := gPenColor;
-    Width := gWidth;
-    Pstyle := gPstyle.Akind;
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
   end;
-  (Figures[High(Figures)] as TroundRect).FillColor := gFillColor;
-  (Figures[High(Figures)] as TroundRect).Bstyle := gBstyle.AStyle;
-  (Figures[High(Figures)] as TroundRect).Round := gRound;
+  (Figures[High(Figures)] as TroundRect).FillColor := gOptions.gFillColor;
+  (Figures[High(Figures)] as TroundRect).Bstyle := gOptions.gBstyle.AStyle;
+  (Figures[High(Figures)] as TroundRect).Round := gOptions.gRound;
 end;
 
 procedure TellipceTool.MouseDown(x, y: integer);
@@ -319,12 +418,12 @@ begin
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
     Dpoints[1] := ScreenToWorld(Point(x, y));
-    PenColor := gPenColor;
-    Width := gWidth;
-    Pstyle := gPstyle.Akind;
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
   end;
-  (Figures[High(Figures)] as Tellipce).FillColor := gFillColor;
-  (Figures[High(Figures)] as Tellipce).Bstyle := gBstyle.AStyle;
+  (Figures[High(Figures)] as Tellipce).FillColor := gOptions.gFillColor;
+  (Figures[High(Figures)] as Tellipce).Bstyle := gOptions.gBstyle.AStyle;
 end;
 
 procedure TpolyLineTool.MouseDown(x, y: integer);
@@ -334,9 +433,9 @@ begin
   with Figures[High(Figures)] do
   begin
     Dpoints[0] := ScreenToWorld(Point(x, y));
-    PenColor := gPenColor;
-    Width := gWidth;
-    Pstyle := gPstyle.Akind;
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
   end;
 end;
 
@@ -365,6 +464,37 @@ begin
   StartOffset.Y := Offset.Y;
 end;
 
+procedure TshiftTool.MouseDown(x, y: integer);
+var
+  i: integer;
+begin
+  if (Length(SelectFig) > 0) then
+  begin
+    index := IntoAnchors(x, y);
+    for i := 0 to High(SelectFig) do
+    begin
+      case index of
+        1:
+        begin
+          if SelectFig[i].Dpoints[1].X < SelectFig[i].Dpoints[0].X then
+            SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
+          if SelectFig[i].Dpoints[1].Y < SelectFig[i].Dpoints[0].Y then
+            SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
+        end;
+        0:
+        begin
+          if SelectFig[i].Dpoints[0].X > SelectFig[i].Dpoints[1].X then
+            SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
+          if SelectFig[i].Dpoints[0].Y > SelectFig[i].Dpoints[1].Y then
+            SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
+        end;
+      end;
+    end;
+  end;
+  StartsPoint.Y := y;
+  StartsPoint.X := x;
+end;
+
 constructor TloupeTool.Create;
 begin
   ToolName := 'Лупа';
@@ -378,6 +508,11 @@ end;
 constructor ThandTool.Create;
 begin
   ToolName := 'Рука';
+end;
+
+constructor TshiftTool.Create;
+begin
+  ToolName := 'Передвинуть';
 end;
 
 constructor TlineTool.Create;
@@ -447,5 +582,6 @@ initialization
   RegisterTool(TloupeTool.Create);
   RegisterTool(ThandTool.Create);
   RegisterTool(TselectTool.Create);
+  RegisterTool(TshiftTool.Create);
 
 end.

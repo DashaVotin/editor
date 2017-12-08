@@ -95,6 +95,8 @@ begin
     ToolList[ToolNum].Options[i].ToLabels(PanelOptions).Align := alTop;
   end;
   PanelOptions.Visible := True;
+  if ToolNum <> 8 then
+    SetLength(SelectFig, 0);
 end;
 
 procedure TFgraphics.ChangeScrols;
@@ -108,7 +110,7 @@ end;
 
 procedure TFgraphics.TpenStyleSelectTimer(Sender: TObject);
 var
-  i, j: integer;
+  j: integer;
 begin
   if Length(SelectFig) > 0 then
   begin
@@ -117,35 +119,39 @@ begin
         (SelectFig[High(SelectFig)] as Tselect).i += 1
       else
         (SelectFig[High(SelectFig)] as Tselect).i := 1;
-    for i := 0 to High(SelectFig) - 1 do
-      for j := 1 to High(Figures) do
-        if Figures[j] = SelectFig[i] then
+    if changeOp then
+    begin
+      for j := 0 to High(SelectFig) - 1 do
+      begin
+        SelectFig[j].PenColor := gOptions.gPenColor;
+        SelectFig[j].Pstyle := gOptions.gPstyle.Akind;
+        SelectFig[j].Width := gOptions.gWidth;
+        if PanelOptions.ComponentCount > 6 then
         begin
-          Figures[j].PenColor := gPenColor;
-          Figures[j].Pstyle := gPstyle.Akind;
-          Figures[j].Width := gWidth;
-          if PanelOptions.ComponentCount > 6 then
+          if SelectFig[j].ClassType = Tellipce then
           begin
-            if Figures[j].ClassType = Tellipce then
-            begin
-              (Figures[j] as Tellipce).Bstyle := gBstyle.AStyle;
-              (Figures[j] as Tellipce).FillColor := gFillColor;
-            end
-            else
-            if Figures[j].ClassType = Trectangle then
-            begin
-              (Figures[j] as Trectangle).Bstyle := gBstyle.AStyle;
-              (Figures[j] as Trectangle).FillColor := gFillColor;
-            end
-            else
-            if Figures[j].ClassType = TroundRect then
-            begin
-              (Figures[j] as TroundRect).Bstyle := gBstyle.AStyle;
-              (Figures[j] as TroundRect).FillColor := gFillColor;
-              (Figures[j] as TroundRect).Round := gRound;
-            end;
+            (SelectFig[j] as Tellipce).Bstyle := gOptions.gBstyle.AStyle;
+            (SelectFig[j] as Tellipce).FillColor := gOptions.gFillColor;
+          end
+          else
+          if SelectFig[j].ClassType = Trectangle then
+          begin
+            (SelectFig[j] as Trectangle).Bstyle := gOptions.gBstyle.AStyle;
+            (SelectFig[j] as Trectangle).FillColor := gOptions.gFillColor;
+          end
+          else
+          if SelectFig[j].ClassType = TroundRect then
+          begin
+            (SelectFig[j] as TroundRect).Bstyle := gOptions.gBstyle.AStyle;
+            (SelectFig[j] as TroundRect).FillColor := gOptions.gFillColor;
+            (SelectFig[j] as TroundRect).Round := gOptions.gRound;
           end;
         end;
+      end;
+      SetLength(SelectFig, High(SelectFig));
+      CreateHighSelectFig;
+      changeOp := False;
+    end;
   end;
   PBdraw.Invalidate;
 end;
@@ -195,7 +201,7 @@ begin
   ButtonCreate(Point(10, 10), Point(100, 30), 0, PNfigures).Click;
   for i := 1 to 4 do
     ButtonCreate(Point(10, i * 40 + 10), Point(100, 30), i, PNfigures).Align := alNone;
-  for i := 5 to 7 do
+  for i := 5 to 8 do
     ButtonCreate(Point(10, (i - 5) * 40 + 40), Point(95, 30), i, PNzoom).Align := alNone;
   Offset.X := 0;
   Offset.Y := 0;
@@ -357,14 +363,13 @@ end;
 procedure TFgraphics.PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
-  if Length(SelectFig) > 0 then
-    if SelectFig[High(SelectFig)].ClassType = Tselect then
-      SetLength(SelectFig, 0);
   if button = mbLeft then
   begin
     Drawing := True;
     ToolList[ToolNum].MouseDown(x, y);
   end;
+  if (Length(SelectFig) > 0) and (ToolNum<>8) then
+    SetLength(SelectFig, 0);
 end;
 
 procedure TFgraphics.PBdrawMouseMove(Sender: TObject; Shift: TShiftState;
@@ -400,7 +405,10 @@ begin
   for i := 0 to High(Figures) do
     Figures[i].Draw(PBdraw.Canvas);
   if Length(SelectFig) > 0 then
+  begin
     SelectFig[High(SelectFig)].Draw(PBdraw.Canvas);
+    DrawAnchors(PBdraw.Canvas);
+  end;
 end;
 
 procedure TFgraphics.SEscaleChange(Sender: TObject);

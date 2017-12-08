@@ -10,6 +10,11 @@ uses
 
 type
 
+ {     Tanchors = record
+    x,y:Double;
+    ind: integer;
+  end;    }
+
   Tfigure = class
     PenColor: TColor;
     Width: integer;
@@ -55,6 +60,7 @@ type
 
   Tselect = class(Tfigure)
     i: integer;
+    Anchors: array[0..2] of TdoublePoint;
     procedure Draw(Acanvas: Tcanvas); override;
     constructor Create;
   end;
@@ -169,8 +175,10 @@ begin
   w := INDENT + Width;
   if (x1 = x2) then
   begin
-    if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then
-      Result := True;
+    if (y >= y1) and (y <= y2) and (x <= x1 + w) and (x >= x1 - w) then
+      Result := True
+    else
+      Result := False;
   end
   else
     for i := 1 to 2 do
@@ -206,11 +214,13 @@ begin
     w := INDENT + Width;
     if (x1 = x2) then
     begin
-      if ((y >= y1) and (y <= y2)) or ((y <= y1) and (y >= y2)) then
+      if (y >= y1) and (y <= y2) and (x <= x1 + w) and (x >= x1 - w) then
       begin
-        Result := True;
-        exit;
-      end;
+      Result := True;
+      exit;
+      end
+    else
+      Result := False;
     end
     else
       for j := 1 to 2 do
