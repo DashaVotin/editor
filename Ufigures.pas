@@ -10,11 +10,6 @@ uses
 
 type
 
- {     Tanchors = record
-    x,y:Double;
-    ind: integer;
-  end;    }
-
   Tfigure = class
     PenColor: TColor;
     Width: integer;
@@ -216,11 +211,11 @@ begin
     begin
       if (y >= y1) and (y <= y2) and (x <= x1 + w) and (x >= x1 - w) then
       begin
-      Result := True;
-      exit;
+        Result := True;
+        exit;
       end
-    else
-      Result := False;
+      else
+        Result := False;
     end
     else
       for j := 1 to 2 do

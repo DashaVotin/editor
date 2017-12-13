@@ -246,15 +246,29 @@ begin
             SelectFig[i].Dpoints[j].Y := SelectFig[i].Dpoints[j].Y - StartsPoint.Y + y;
           end;
         1:
-        begin
-          SelectFig[i].Dpoints[1].X := SelectFig[i].Dpoints[1].X - StartsPoint.X + x;
-          SelectFig[i].Dpoints[1].Y := SelectFig[i].Dpoints[1].Y - StartsPoint.Y + y;
-        end;
+          if SelectFig[i].ClassType <> Tpolyline then
+          begin
+            SelectFig[i].Dpoints[1].X := SelectFig[i].Dpoints[1].X - StartsPoint.X + x;
+            SelectFig[i].Dpoints[1].Y := SelectFig[i].Dpoints[1].Y - StartsPoint.Y + y;
+          end
+          else
+            for j := 0 to high(SelectFig[i].Dpoints) do
+            begin
+              SelectFig[i].Dpoints[j].X := SelectFig[i].Dpoints[j].X - StartsPoint.X + x;
+              SelectFig[i].Dpoints[j].Y := SelectFig[i].Dpoints[j].Y - StartsPoint.Y + y;
+            end;
         0:
-        begin
-          SelectFig[i].Dpoints[0].X := SelectFig[i].Dpoints[0].X - StartsPoint.X + x;
-          SelectFig[i].Dpoints[0].Y := SelectFig[i].Dpoints[0].Y - StartsPoint.Y + y;
-        end;
+          if SelectFig[i].ClassType <> Tpolyline then
+          begin
+            SelectFig[i].Dpoints[0].X := SelectFig[i].Dpoints[0].X - StartsPoint.X + x;
+            SelectFig[i].Dpoints[0].Y := SelectFig[i].Dpoints[0].Y - StartsPoint.Y + y;
+          end
+          else
+            for j := 0 to high(SelectFig[i].Dpoints) do
+            begin
+              SelectFig[i].Dpoints[j].X := SelectFig[i].Dpoints[j].X - StartsPoint.X + x;
+              SelectFig[i].Dpoints[j].Y := SelectFig[i].Dpoints[j].Y - StartsPoint.Y + y;
+            end;
       end;
     SetLength(SelectFig, High(SelectFig));
     CreateHighSelectFig;
@@ -472,24 +486,25 @@ begin
   begin
     index := IntoAnchors(x, y);
     for i := 0 to High(SelectFig) do
-    begin
-      case index of
-        1:
-        begin
-          if SelectFig[i].Dpoints[1].X < SelectFig[i].Dpoints[0].X then
-            SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
-          if SelectFig[i].Dpoints[1].Y < SelectFig[i].Dpoints[0].Y then
-            SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
-        end;
-        0:
-        begin
-          if SelectFig[i].Dpoints[0].X > SelectFig[i].Dpoints[1].X then
-            SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
-          if SelectFig[i].Dpoints[0].Y > SelectFig[i].Dpoints[1].Y then
-            SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
+      if SelectFig[i].ClassType <> Tpolyline then
+      begin
+        case index of
+          1:
+          begin
+            if SelectFig[i].Dpoints[1].X < SelectFig[i].Dpoints[0].X then
+              SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
+            if SelectFig[i].Dpoints[1].Y < SelectFig[i].Dpoints[0].Y then
+              SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
+          end;
+          0:
+          begin
+            if SelectFig[i].Dpoints[0].X > SelectFig[i].Dpoints[1].X then
+              SwapDouble(SelectFig[i].Dpoints[1].X, SelectFig[i].Dpoints[0].X);
+            if SelectFig[i].Dpoints[0].Y > SelectFig[i].Dpoints[1].Y then
+              SwapDouble(SelectFig[i].Dpoints[1].Y, SelectFig[i].Dpoints[0].Y);
+          end;
         end;
       end;
-    end;
   end;
   StartsPoint.Y := y;
   StartsPoint.X := x;

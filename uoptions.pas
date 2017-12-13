@@ -84,7 +84,7 @@ implementation
 procedure TpenColor.GetOption(ASender: TObject);
 begin
   gOptions.gPenColor := (ASender as TColorButton).ButtonColor;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 procedure Tround.GetOption(ASender: TObject);
@@ -104,27 +104,27 @@ begin
       (ASender as TSpinEdit).Text := '30';
     end;
   end;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 procedure TfillStyle.GetOption(ASender: TObject);
 begin
   gOptions.gBstyle.AStyle := Styles[(ASender as TComboBox).ItemIndex].AStyle;
   gOptions.gBstyle.AIndex := (ASender as TComboBox).ItemIndex;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 procedure TpenKind.GetOption(ASender: TObject);
 begin
   gOptions.gPstyle.Akind := Kinds[(ASender as TComboBox).ItemIndex].Akind;
   gOptions.gPstyle.AIndex := (ASender as TComboBox).ItemIndex;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 procedure TfillColor.GetOption(ASender: TObject);
 begin
   gOptions.gFillColor := (ASender as TColorButton).ButtonColor;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 procedure Twidth.GetOption(ASender: TObject);
@@ -144,7 +144,7 @@ begin
       (ASender as TSpinEdit).Text := '1';
     end;
   end;
-  changeOp:=true;
+  changeOp := True;
 end;
 
 constructor TfillStyle.Create;

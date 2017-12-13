@@ -17,6 +17,9 @@ type
     Medit: TMenuItem;
     MenuItem1: TMenuItem;
     Mbackground: TMenuItem;
+    Mopen: TMenuItem;
+    Msave: TMenuItem;
+    Mtot: TMenuItem;
     MselectAll: TMenuItem;
     MselectUndone: TMenuItem;
     MselectDelete: TMenuItem;
@@ -49,7 +52,9 @@ type
     procedure MforegroundClick(Sender: TObject);
     procedure MhomeClick(Sender: TObject);
     procedure MinformationClick(Sender: TObject);
+    procedure MopenClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
+    procedure MsaveClick(Sender: TObject);
     procedure MselectAllClick(Sender: TObject);
     procedure MselectDeleteClick(Sender: TObject);
     procedure MselectUndoneClick(Sender: TObject);
@@ -309,6 +314,23 @@ begin
   PBdraw.Invalidate;
 end;
 
+procedure TFgraphics.MsaveClick(Sender: TObject);
+begin
+  //сохранение:
+{ фигура:
+  PenColor: TColor;
+    Width: integer;
+    Pstyle: TPenStyle;
+    Dpoints: array of TdoublePoint;
+    FigureName: string;
+  заливочные:
+   FillColor: TColor;
+    Bstyle: TBrushStyle;
+  раундрект:
+  Round: integer;
+  }
+end;
+
 procedure TFgraphics.MselectAllClick(Sender: TObject);
 var
   i: integer;
@@ -357,7 +379,12 @@ end;
 
 procedure TFgraphics.MinformationClick(Sender: TObject);
 begin
-  ShowMessage('Графический редактор. Сделала это нечто - Вотинцева Даша. В 2017 году)');
+  ShowMessage('Графический редактор. Сделала - Вотинцева Даша. В 2017 году)');
+end;
+
+procedure TFgraphics.MopenClick(Sender: TObject);
+begin
+  //загрузка
 end;
 
 procedure TFgraphics.PBdrawMouseDown(Sender: TObject; Button: TMouseButton;
@@ -368,7 +395,7 @@ begin
     Drawing := True;
     ToolList[ToolNum].MouseDown(x, y);
   end;
-  if (Length(SelectFig) > 0) and (ToolNum<>8) then
+  if (Length(SelectFig) > 0) and (ToolNum <> 8) then
     SetLength(SelectFig, 0);
 end;
 
@@ -390,6 +417,7 @@ begin
     ToolList[ToolNum].MouseUp(x, y, True, PanelOptions);
   if Button = mbRight then
     ToolList[ToolNum].MouseUp(x, y, False, PanelOptions);
+  changeOp := False;
   Drawing := False;
   PBdraw.Invalidate;
 end;

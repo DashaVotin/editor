@@ -105,8 +105,22 @@ object Fgraphics: TFgraphics
     top = 96
     object Mfile: TMenuItem
       Caption = 'Файл'
+      object Mopen: TMenuItem
+        Caption = 'Открыть'
+        ShortCut = 16463
+        OnClick = MopenClick
+      end
+      object Msave: TMenuItem
+        Caption = 'Сохранить'
+        ShortCut = 16467
+        OnClick = MsaveClick
+      end
+      object Mtot: TMenuItem
+        Caption = '-'
+      end
       object Mexit: TMenuItem
         Caption = 'Выход'
+        ShortCut = 27
         OnClick = MexitClick
       end
     end
@@ -119,7 +133,7 @@ object Fgraphics: TFgraphics
       end
       object Mreturn: TMenuItem
         Caption = 'Вернуть'
-        ShortCut = 49242
+        ShortCut = 24666
         OnClick = MreturnClick
       end
       object MenuItem1: TMenuItem
@@ -158,7 +172,7 @@ object Fgraphics: TFgraphics
       end
       object Mhome: TMenuItem
         Caption = 'Показать все'
-        ShortCut = 16467
+        ShortCut = 36
         OnClick = MhomeClick
       end
       object Meraseall: TMenuItem
@@ -171,6 +185,7 @@ object Fgraphics: TFgraphics
       Caption = 'Справка'
       object Minformation: TMenuItem
         Caption = 'О программе'
+        ShortCut = 112
         OnClick = MinformationClick
       end
     end
