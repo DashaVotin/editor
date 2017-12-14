@@ -18,6 +18,7 @@ type
     FigureName: string;
     procedure Draw(Acanvas: Tcanvas); virtual; abstract;
     function OnePointSelect(x, y: integer): boolean; virtual;
+    function SaveOption(): string; virtual;
   end;
 
   Tline = class(Tfigure)
@@ -31,6 +32,7 @@ type
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     function OnePointSelect(x, y: integer): boolean; override;
+    function SaveOption(): string; override;
     constructor Create;
   end;
 
@@ -39,6 +41,7 @@ type
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     function OnePointSelect(x, y: integer): boolean; override;
+    function SaveOption(): string; override;
     constructor Create;
   end;
 
@@ -66,13 +69,58 @@ type
     Bstyle: TBrushStyle;
     procedure Draw(Acanvas: Tcanvas); override;
     function OnePointSelect(x, y: integer): boolean; override;
+    function SaveOption(): string; override;
     constructor Create;
   end;
+
+  function BsToStr(bs:TBrushStyle): string;
 
 const
   INDENT = 5;
 
 implementation
+
+function BsToStr(bs:TBrushStyle): string;
+begin
+  case bs of
+  bsSolid:
+    Result:='bsSolid';
+  bsClear:
+    Result:='bsClear';
+  bsHorizontal:
+    Result:='bsHorizontal';
+  bsVertical:
+    Result:='bsVertical';
+  bsFDiagonal:
+    Result:='bsFDiagonal';
+  bsBDiagonal:
+    Result:='bsBDiagonal';
+  bsCross:
+    Result:='bsCross';
+  bsDiagCross:
+    Result:='bsDiagCross';
+  end;
+end;
+
+function Tfigure.SaveOption(): string;
+begin
+  Result:='';
+end;
+
+function Trectangle.SaveOption(): string;
+begin
+  Result:='"BrushColor": "'+ColorToString(FillColor)+'", '+'"BrushStyle": "'+ BsToStr(Bstyle)+'", ';
+end;
+
+function Tellipce.SaveOption(): string;
+begin
+  Result:='"BrushColor": "'+ColorToString(FillColor)+'", '+'"BrushStyle": "'+ BsToStr(Bstyle)+'", ';
+end;
+
+function TroundRect.SaveOption(): string;
+begin
+  Result:='"BrushColor": "'+ColorToString(FillColor)+'", "BrushStyle": "'+ BsToStr(Bstyle)+'", "Round": '+Round.ToString+', ';
+end;
 
 procedure Tline.Draw(Acanvas: TCanvas);
 begin
