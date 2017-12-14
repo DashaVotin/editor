@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus, Graph,
-  ExtCtrls, StdCtrls, Spin, Ufigures, Utools, UdPoints, Uoptions;
+  ExtCtrls, StdCtrls, Spin, Ufigures, Utools, UdPoints, Uoptions, Fpjson, jsonparser;
 
 type
 
@@ -34,10 +34,12 @@ type
     Mexit: TMenuItem;
     Mfile: TMenuItem;
     Mmenu: TMainMenu;
+    Dopen: TOpenDialog;
     PNzoom: TPanel;
     PNfigures: TPanel;
     PNtool: TPanel;
     PBdraw: TPaintBox;
+    Dsave: TSaveDialog;
     ScrolHoriz: TScrollBar;
     ScrolVert: TScrollBar;
     SEscale: TSpinEdit;
@@ -315,8 +317,34 @@ begin
 end;
 
 procedure TFgraphics.MsaveClick(Sender: TObject);
+var fSave:text;
+  i,j: integer;
 begin
   //сохранение:
+  if Dsave.Execute then
+  begin
+   AssignFile(fSave,Dsave.FileName);
+   Rewrite(fSave);
+   write(fSave,'{');
+   for i:=1 to High(Figures) do
+   with Figures[i] do
+   begin
+     Write(fSave,' "Figure":{ "Name": "',FigureName,'", "Points":{');
+     for j:=0 to High(Dpoints)-1 do
+     begin
+     Write(fSave,'"',j,'x": ',WorldToScreen(Dpoints[j]).x,', ');
+     Write(fSave,'"',j,'y": ',WorldToScreen(Dpoints[j]).y,', ');
+     end;
+     Write(fSave,'"',High(Dpoints),'x": ',WorldToScreen(Dpoints[High(Dpoints)]).x,', ');
+     Write(fSave,'"',High(Dpoints),'x": ',WorldToScreen(Dpoints[High(Dpoints)]).y,'}}');
+    // Write(fSave,'"PenColor": "',PenColor,' ');
+   //  Write(fSave,Width,' ');
+   //  Write(fSave,Pstyle,' }');
+     //////
+   end;
+   write(fSave,'}');
+   CloseFile(fSave);
+  end;
 { фигура:
   PenColor: TColor;
     Width: integer;
@@ -329,6 +357,40 @@ begin
   раундрект:
   Round: integer;
   }
+end;
+
+procedure TFgraphics.MopenClick(Sender: TObject);
+var
+  jData : TJSONData;
+   s:string;
+   fOpen: text;
+   i,j: integer;
+begin
+  //загрузка
+  if Dopen.Execute then
+    begin
+     AssignFile(fOpen,Dopen.FileName);
+     Reset(fOpen);
+     read(fOpen,s);
+     CloseFile(fOpen);
+     jData := GetJSON(s);
+     SetLength(Figures,2);
+     with Figures[1] do
+     begin
+     FigureName:=jData.FindPath('Figure.Name').AsString;
+     SetLength(Dpoints,2);
+     Dpoints[0] := ScreenToWorld(Point(jData.FindPath('Figure.Points.0x').AsInteger, jData.FindPath('Figure.Points.0y').AsInteger));
+     Dpoints[1] := ScreenToWorld(Point(jData.FindPath('Figure.Points.1x').AsInteger, jData.FindPath('Figure.Points.1y').AsInteger));
+     end;
+     PBdraw.Invalidate;
+    {
+    Dpoints[0] := ScreenToWorld(Point(x, y));
+    Dpoints[1] := ScreenToWorld(Point(x, y));
+    PenColor := gOptions.gPenColor;
+    Width := gOptions.gWidth;
+    Pstyle := gOptions.gPstyle.Akind;
+  end;                              }
+    end;
 end;
 
 procedure TFgraphics.MselectAllClick(Sender: TObject);
@@ -380,11 +442,6 @@ end;
 procedure TFgraphics.MinformationClick(Sender: TObject);
 begin
   ShowMessage('Графический редактор. Сделала - Вотинцева Даша. В 2017 году)');
-end;
-
-procedure TFgraphics.MopenClick(Sender: TObject);
-begin
-  //загрузка
 end;
 
 procedure TFgraphics.PBdrawMouseDown(Sender: TObject; Button: TMouseButton;

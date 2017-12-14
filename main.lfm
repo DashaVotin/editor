@@ -196,4 +196,12 @@ object Fgraphics: TFgraphics
     left = 274
     top = 106
   end
+  object Dopen: TOpenDialog
+    left = 200
+    top = 213
+  end
+  object Dsave: TSaveDialog
+    left = 248
+    top = 245
+  end
 end
