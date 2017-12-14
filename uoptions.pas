@@ -75,8 +75,8 @@ type
     gPstyle: RpenKind;
   end;
 
-  function StringToPenStyle(s: string):TPenStyle;
-  function StringToBrushStyle(s: string):TBrushStyle;
+function StringToPenStyle(s: string): TPenStyle;
+function StringToBrushStyle(s: string): TBrushStyle;
 
 var
   gOptions: TgOptions;
@@ -84,43 +84,43 @@ var
 
 implementation
 
-function StringToPenStyle(s: string):TPenStyle;
+function StringToPenStyle(s: string): TPenStyle;
 begin
   case s of
-  'psSolid':
-    Result:=psSolid;
-  'psClear':
-    Result:=psClear;
-  'psDash':
-    Result:=psDash;
-  'psDashDot':
-    Result:=psDashDot;
-  'psDashDotDot':
-    Result:=psDashDotDot;
-  'psDot':
-    Result:=psDot;
+    'psSolid':
+      Result := psSolid;
+    'psClear':
+      Result := psClear;
+    'psDash':
+      Result := psDash;
+    'psDashDot':
+      Result := psDashDot;
+    'psDashDotDot':
+      Result := psDashDotDot;
+    'psDot':
+      Result := psDot;
   end;
 end;
 
-function StringToBrushStyle(s: string):TBrushStyle;
+function StringToBrushStyle(s: string): TBrushStyle;
 begin
   case s of
-  'bsSolid':
-    Result:=bsSolid;
-  'bsClear':
-    Result:=bsClear;
-  'bsHorizontal':
-    Result:=bsHorizontal;
-  'bsVertical':
-    Result:=bsVertical;
-  'bsFDiagonal':
-    Result:=bsFDiagonal;
-  'bsBDiagonal':
-    Result:=bsBDiagonal;
-  'bsCross':
-    Result:=bsCross;
-  'bsDiagCross':
-    Result:=bsDiagCross;
+    'bsSolid':
+      Result := bsSolid;
+    'bsClear':
+      Result := bsClear;
+    'bsHorizontal':
+      Result := bsHorizontal;
+    'bsVertical':
+      Result := bsVertical;
+    'bsFDiagonal':
+      Result := bsFDiagonal;
+    'bsBDiagonal':
+      Result := bsBDiagonal;
+    'bsCross':
+      Result := bsCross;
+    'bsDiagCross':
+      Result := bsDiagCross;
   end;
 end;
 

@@ -73,53 +73,56 @@ type
     constructor Create;
   end;
 
-  function BsToStr(bs:TBrushStyle): string;
+function BsToStr(bs: TBrushStyle): string;
 
 const
   INDENT = 5;
 
 implementation
 
-function BsToStr(bs:TBrushStyle): string;
+function BsToStr(bs: TBrushStyle): string;
 begin
   case bs of
-  bsSolid:
-    Result:='bsSolid';
-  bsClear:
-    Result:='bsClear';
-  bsHorizontal:
-    Result:='bsHorizontal';
-  bsVertical:
-    Result:='bsVertical';
-  bsFDiagonal:
-    Result:='bsFDiagonal';
-  bsBDiagonal:
-    Result:='bsBDiagonal';
-  bsCross:
-    Result:='bsCross';
-  bsDiagCross:
-    Result:='bsDiagCross';
+    bsSolid:
+      Result := 'bsSolid';
+    bsClear:
+      Result := 'bsClear';
+    bsHorizontal:
+      Result := 'bsHorizontal';
+    bsVertical:
+      Result := 'bsVertical';
+    bsFDiagonal:
+      Result := 'bsFDiagonal';
+    bsBDiagonal:
+      Result := 'bsBDiagonal';
+    bsCross:
+      Result := 'bsCross';
+    bsDiagCross:
+      Result := 'bsDiagCross';
   end;
 end;
 
 function Tfigure.SaveOption(): string;
 begin
-  Result:='';
+  Result := '';
 end;
 
 function Trectangle.SaveOption(): string;
 begin
-  Result:='"BrushColor": "'+ColorToString(FillColor)+'", '+'"BrushStyle": "'+ BsToStr(Bstyle)+'", ';
+  Result := '"BrushColor": "' + ColorToString(FillColor) + '", ' + '"BrushStyle": "' +
+    BsToStr(Bstyle) + '", ';
 end;
 
 function Tellipce.SaveOption(): string;
 begin
-  Result:='"BrushColor": "'+ColorToString(FillColor)+'", '+'"BrushStyle": "'+ BsToStr(Bstyle)+'", ';
+  Result := '"BrushColor": "' + ColorToString(FillColor) + '", ' + '"BrushStyle": "' +
+    BsToStr(Bstyle) + '", ';
 end;
 
 function TroundRect.SaveOption(): string;
 begin
-  Result:='"BrushColor": "'+ColorToString(FillColor)+'", "BrushStyle": "'+ BsToStr(Bstyle)+'", "Round": '+Round.ToString+', ';
+  Result := '"BrushColor": "' + ColorToString(FillColor) + '", "BrushStyle": "' +
+    BsToStr(Bstyle) + '", "Round": ' + Round.ToString + ', ';
 end;
 
 procedure Tline.Draw(Acanvas: TCanvas);

@@ -17,6 +17,7 @@ type
     Medit: TMenuItem;
     MenuItem1: TMenuItem;
     Mbackground: TMenuItem;
+    MsaveAs: TMenuItem;
     Mopen: TMenuItem;
     Msave: TMenuItem;
     Mtot: TMenuItem;
@@ -56,6 +57,7 @@ type
     procedure MinformationClick(Sender: TObject);
     procedure MopenClick(Sender: TObject);
     procedure MreturnClick(Sender: TObject);
+    procedure MsaveAsClick(Sender: TObject);
     procedure MsaveClick(Sender: TObject);
     procedure MselectAllClick(Sender: TObject);
     procedure MselectDeleteClick(Sender: TObject);
@@ -78,6 +80,8 @@ type
   public
 
   end;
+
+procedure SaveFile(FileName: string);
 
 var
   Fgraphics: TFgraphics;
@@ -316,41 +320,54 @@ begin
   PBdraw.Invalidate;
 end;
 
-procedure TFgraphics.MsaveClick(Sender: TObject);
+procedure SaveFile(FileName: string);
 var
   fSave: Text;
   i, j: integer;
 begin
-  //сохранение:
+  AssignFile(fSave, FileName);
+  Rewrite(fSave);
+  Write(fSave, '{"Num": ', High(Figures), ', "Figures":[');
+  for i := 1 to High(Figures) do
+    with Figures[i] do
+    begin
+      Write(fSave, '{ "Type": "', FigureName, '",');
+      Write(fSave, '"PenColor": "', ColorToString(PenColor), '", ');
+      Write(fSave, '"Width": ', Width, ', ');
+      Write(fSave, '"PenStyle": "', Pstyle, '", ');
+      Write(fSave, SaveOption());
+      Write(fSave, '"NumPoint": ', High(Dpoints), ', "Points":[ ');
+      for j := 0 to High(Dpoints) do
+      begin
+        Write(fSave, WorldToScreen(Dpoints[j]).x, ', ');
+        if (i = High(Figures)) and (j = High(Dpoints)) then
+          Write(fSave, WorldToScreen(Dpoints[High(Dpoints)]).y, ']}')
+        else
+        if j = High(Dpoints) then
+          Write(fSave, WorldToScreen(Dpoints[High(Dpoints)]).y, ']}, ')
+        else
+          Write(fSave, WorldToScreen(Dpoints[j]).y, ', ');
+      end;
+    end;
+  Write(fSave, ']}');
+  CloseFile(fSave);
+end;
+
+procedure TFgraphics.MsaveAsClick(Sender: TObject);
+begin
   if Dsave.Execute then
   begin
-    AssignFile(fSave, Dsave.FileName);
-    Rewrite(fSave);
-    Write(fSave, '{"Num": ', High(Figures), ', "Figures":[');
-    for i := 1 to High(Figures) do
-      with Figures[i] do
-      begin
-        Write(fSave, '{ "Type": "', FigureName, '",');
-        Write(fSave, '"PenColor": "', ColorToString(PenColor), '", ');
-        Write(fSave, '"Width": ', Width, ', ');
-        Write(fSave, '"PenStyle": "', Pstyle, '", ');
-        Write(fSave, SaveOption());
-        Write(fSave, '"NumPoint": ', High(Dpoints), ', "Points":[ ');
-        for j := 0 to High(Dpoints) do
-        begin
-          Write(fSave, WorldToScreen(Dpoints[j]).x, ', ');
-          if (i = High(Figures)) and (j = High(Dpoints)) then
-            Write(fSave, WorldToScreen(Dpoints[High(Dpoints)]).y, ']}')
-          else
-          if j = High(Dpoints) then
-            Write(fSave, WorldToScreen(Dpoints[High(Dpoints)]).y, ']}, ')
-          else
-            Write(fSave, WorldToScreen(Dpoints[j]).y, ', ');
-        end;
-      end;
-    Write(fSave, ']}');
-    CloseFile(fSave);
+    SaveFile(Dsave.FileName);
+    Fgraphics.Caption := Dsave.FileName;
   end;
+end;
+
+procedure TFgraphics.MsaveClick(Sender: TObject);
+begin
+  if Fgraphics.Caption <> 'Графический редактор' then
+    SaveFile(Fgraphics.Caption)
+  else
+    MsaveAsClick(Sender);
 end;
 
 procedure TFgraphics.MopenClick(Sender: TObject);
@@ -373,6 +390,8 @@ begin
       ShowMessage('файл поврежден, возможно вами, возможно намеренно...');
       exit;
     end;
+    Scale := 1;
+    SetLength(SelectFig, 0);
     SetLength(Figures, 1);
     for i := 1 to jData.FindPath('Num').AsInteger do
     begin
@@ -385,27 +404,33 @@ begin
         begin
           Figures[i] := Trectangle.Create;
           s := 'Figures[' + IntToStr(i - 1) + '].BrushColor';
-          (Figures[i] as Trectangle).FillColor := StringToColor(jData.FindPath(s).AsString);
+          (Figures[i] as Trectangle).FillColor :=
+            StringToColor(jData.FindPath(s).AsString);
           s := 'Figures[' + IntToStr(i - 1) + '].BrushStyle';
-          (Figures[i] as Trectangle).Bstyle := StringToBrushStyle(jData.FindPath(s).AsString);
+          (Figures[i] as Trectangle).Bstyle :=
+            StringToBrushStyle(jData.FindPath(s).AsString);
         end;
         'TroundRect':
         begin
           Figures[i] := TroundRect.Create;
           s := 'Figures[' + IntToStr(i - 1) + '].BrushColor';
-          (Figures[i] as TroundRect).FillColor := StringToColor(jData.FindPath(s).AsString);
+          (Figures[i] as TroundRect).FillColor :=
+            StringToColor(jData.FindPath(s).AsString);
           s := 'Figures[' + IntToStr(i - 1) + '].Round';
           (Figures[i] as TroundRect).Round := jData.FindPath(s).AsInteger;
           s := 'Figures[' + IntToStr(i - 1) + '].BrushStyle';
-          (Figures[i] as TroundRect).Bstyle := StringToBrushStyle(jData.FindPath(s).AsString);
+          (Figures[i] as TroundRect).Bstyle :=
+            StringToBrushStyle(jData.FindPath(s).AsString);
         end;
         'Tellipce':
         begin
           Figures[i] := Tellipce.Create;
           s := 'Figures[' + IntToStr(i - 1) + '].BrushColor';
-          (Figures[i] as Tellipce).FillColor := StringToColor(jData.FindPath(s).AsString);
+          (Figures[i] as Tellipce).FillColor :=
+            StringToColor(jData.FindPath(s).AsString);
           s := 'Figures[' + IntToStr(i - 1) + '].BrushStyle';
-          (Figures[i] as Tellipce).Bstyle := StringToBrushStyle(jData.FindPath(s).AsString);
+          (Figures[i] as Tellipce).Bstyle :=
+            StringToBrushStyle(jData.FindPath(s).AsString);
         end;
         'Tpolyline':
           Figures[i] := Tpolyline.Create;
@@ -431,6 +456,7 @@ begin
         Pstyle := StringToPenStyle(jData.FindPath(s).AsString);
       end;
     end;
+    Fgraphics.Caption := Dopen.FileName;
     jData.Free;
     PBdraw.Invalidate;
   end;
