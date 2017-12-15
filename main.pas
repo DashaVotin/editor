@@ -46,6 +46,7 @@ type
     SEscale: TSpinEdit;
     PanelOptions: TPanel;
     TpenStyleSelect: TTimer;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure MannulmentClick(Sender: TObject);
@@ -219,6 +220,12 @@ begin
   Scale := 1;
   RectScaleWight := PBdraw.Width;
   RectScaleHeight := PBdraw.Height;
+end;
+
+procedure TFgraphics.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  if MessageDlg('Сохранить файл?', mtConfirmation, mbOKCancel, 0)=1 then
+      MsaveClick(Sender);
 end;
 
 procedure TFgraphics.FormResize(Sender: TObject);

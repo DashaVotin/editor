@@ -8,6 +8,7 @@ object Fgraphics: TFgraphics
   ClientWidth = 642
   KeyPreview = True
   Menu = Mmenu
+  OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDesktopCenter
