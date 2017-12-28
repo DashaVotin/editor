@@ -214,8 +214,8 @@ end;
 
 procedure ThandTool.MouseMove(x, y: integer);
 begin
-  Offset.X := StartOffset.X + StartPoint.X - x;
-  Offset.Y := StartOffset.Y + StartPoint.Y - y;
+  Offset.X := StartOffset.X + StartPoint.X - x;             ////////////////////
+  Offset.Y := StartOffset.Y + StartPoint.Y - y;            /////////////////////
 end;
 
 procedure Ttools.MouseMove(x, y: integer);
@@ -472,10 +472,10 @@ end;
 
 procedure ThandTool.MouseDown(x, y: integer);
 begin
-  StartPoint.X := x;
-  StartPoint.Y := y;
-  StartOffset.X := Offset.X;
-  StartOffset.Y := Offset.Y;
+  StartPoint.X := x;                              //////////////
+  StartPoint.Y := y;                              //////////////////
+  StartOffset.X := Offset.X;                      //////////////////
+  StartOffset.Y := Offset.Y;                      ///////////////////////
 end;
 
 procedure TshiftTool.MouseDown(x, y: integer);

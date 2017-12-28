@@ -1,14 +1,14 @@
 object Fgraphics: TFgraphics
   Left = 17
-  Height = 667
+  Height = 636
   Top = 152
-  Width = 642
+  Width = 726
   Caption = 'Графический редактор'
-  ClientHeight = 642
-  ClientWidth = 642
+  ClientHeight = 611
+  ClientWidth = 726
   KeyPreview = True
   Menu = Mmenu
-  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDesktopCenter
@@ -21,9 +21,9 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = ScrolHoriz
     Left = 120
-    Height = 624
+    Height = 593
     Top = 0
-    Width = 504
+    Width = 588
     Anchors = [akTop, akLeft, akRight, akBottom]
     ParentColor = False
     ParentFont = False
@@ -34,11 +34,11 @@ object Fgraphics: TFgraphics
   end
   object PNtool: TPanel
     Left = 0
-    Height = 642
+    Height = 611
     Top = 0
     Width = 120
     Align = alLeft
-    ClientHeight = 642
+    ClientHeight = 611
     ClientWidth = 120
     TabOrder = 0
     object PNfigures: TPanel
@@ -50,24 +50,11 @@ object Fgraphics: TFgraphics
     end
     object PNzoom: TPanel
       Left = 1
-      Height = 200
+      Height = 169
       Top = 441
       Width = 118
       Align = alBottom
-      ClientHeight = 200
-      ClientWidth = 118
       TabOrder = 1
-      object SEscale: TSpinEdit
-        Left = 10
-        Height = 28
-        Top = 10
-        Width = 95
-        MaxValue = 10000
-        MinValue = 1
-        OnChange = SEscaleChange
-        TabOrder = 0
-        Value = 1
-      end
     end
   end
   object ScrolHoriz: TScrollBar
@@ -78,8 +65,8 @@ object Fgraphics: TFgraphics
     AnchorSideBottom.Side = asrBottom
     Left = 120
     Height = 18
-    Top = 624
-    Width = 504
+    Top = 593
+    Width = 588
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 1
@@ -92,8 +79,8 @@ object Fgraphics: TFgraphics
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 624
-    Height = 642
+    Left = 708
+    Height = 611
     Top = 0
     Width = 18
     Anchors = [akTop, akRight, akBottom]
@@ -132,17 +119,35 @@ object Fgraphics: TFgraphics
     end
     object Medit: TMenuItem
       Caption = 'Правка'
-      object Mannulment: TMenuItem
+      object Mundo: TMenuItem
         Caption = 'Отменить'
         ShortCut = 16474
-        OnClick = MannulmentClick
+        OnClick = MundoClick
       end
-      object Mreturn: TMenuItem
+      object Mredo: TMenuItem
         Caption = 'Вернуть'
         ShortCut = 24666
-        OnClick = MreturnClick
+        OnClick = MredoClick
       end
       object MenuItem1: TMenuItem
+        Caption = '-'
+      end
+      object Mcut: TMenuItem
+        Caption = 'Вырезать'
+        ShortCut = 16472
+        OnClick = McutClick
+      end
+      object Mcopy: TMenuItem
+        Caption = 'Копировать'
+        ShortCut = 16451
+        OnClick = McopyClick
+      end
+      object Mput: TMenuItem
+        Caption = 'Вставить'
+        ShortCut = 16470
+        OnClick = MputClick
+      end
+      object MenuItem5: TMenuItem
         Caption = '-'
       end
       object MselectAll: TMenuItem

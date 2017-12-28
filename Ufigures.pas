@@ -74,6 +74,7 @@ type
   end;
 
 function BsToStr(bs: TBrushStyle): string;
+function PsToStr(ps: TPenStyle): string;
 
 const
   INDENT = 5;
@@ -99,6 +100,24 @@ begin
       Result := 'bsCross';
     bsDiagCross:
       Result := 'bsDiagCross';
+  end;
+end;
+
+function PsToStr(ps: TPenStyle): string;
+begin
+  case ps of
+    psSolid:
+      Result := 'psSolid';
+    psClear:
+      Result := 'psClear';
+    psDash:
+      Result := 'psDash';
+    psDashDot:
+      Result := 'psDashDot';
+    psDashDotDot:
+      Result := 'psDashDotDot';
+    psDot:
+      Result := 'psDot';
   end;
 end;
 

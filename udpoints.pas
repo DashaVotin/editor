@@ -27,7 +27,7 @@ implementation
 
 procedure RectScale(Amin, Amax: TdoublePoint);
 begin
-  if (Amax.X - Amin.X > 0) then
+  if (Amax.X - Amin.X > 0) and (Amax.Y - Amin.Y > 0) then
   begin
     if RectScaleWight / (Amax.X - Amin.X) > RectScaleHeight / (Amax.Y - Amin.Y) then
       Scale := RectScaleHeight / (Amax.Y - Amin.Y)
